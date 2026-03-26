@@ -45,7 +45,7 @@ useSeoMeta({
           v-if="appConfig.social.github"
           :href="appConfig.social.github"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           class="flex items-center gap-2 hover:text-brand-text"
         >
           <Icon name="lucide:github" class="h-4 w-4" />

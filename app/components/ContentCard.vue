@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '~/composables/useFormatDate'
+
 defineProps<{
   to: string
   label?: string
@@ -28,7 +30,7 @@ defineProps<{
       {{ description }}
     </p>
     <div v-if="date || readingTime" class="mt-3 flex items-center gap-3 text-xs text-brand-subtle">
-      <span v-if="date">{{ date }}</span>
+      <span v-if="date">{{ formatDate(date) }}</span>
       <span v-if="readingTime">{{ readingTime }} min</span>
     </div>
   </NuxtLink>

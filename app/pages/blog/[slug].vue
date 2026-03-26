@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '~/composables/useFormatDate'
+
 const route = useRoute()
 const { data: post } = await useAsyncData(route.path, () =>
   queryCollection('blog').path(route.path).first()
@@ -24,7 +26,7 @@ useSeoMeta({
       <h1 class="text-3xl font-bold leading-tight">{{ post.title }}</h1>
       <p class="mt-2 text-lg text-brand-muted">{{ post.description }}</p>
       <div class="mt-3 flex items-center gap-3 text-sm text-brand-subtle">
-        <span>{{ post.date }}</span>
+        <span>{{ formatDate(post.date) }}</span>
         <span v-if="post.readingTime">{{ post.readingTime }} min</span>
       </div>
     </header>

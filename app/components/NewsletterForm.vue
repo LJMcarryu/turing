@@ -25,7 +25,7 @@ async function subscribe() {
     />
     <button
       type="submit"
-      class="rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent px-5 py-2 text-sm font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+      class="btn-primary px-5 py-2 text-sm"
       :disabled="status === 'loading'"
     >
       {{ status === 'loading' ? '...' : status === 'success' ? '已订阅' : '订阅' }}

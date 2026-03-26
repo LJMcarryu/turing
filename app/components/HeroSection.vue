@@ -17,7 +17,7 @@ const appConfig = useAppConfig()
       <div class="mt-8 flex items-center justify-center gap-4">
         <NuxtLink
           to="/learn"
-          class="rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent px-6 py-2.5 font-medium text-white transition-opacity hover:opacity-90"
+          class="btn-primary"
         >
           开始学习
         </NuxtLink>

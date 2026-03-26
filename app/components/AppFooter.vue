@@ -31,7 +31,7 @@ const year = new Date().getFullYear()
             v-if="appConfig.social.github"
             :href="appConfig.social.github"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             class="text-brand-subtle hover:text-brand-text"
           >
             <Icon name="lucide:github" class="h-5 w-5" />

@@ -18,9 +18,13 @@ useSeoMeta({
 
 const levelFilter = ref('')
 
-const { data: articles } = await useAsyncData(`learn-${category}`, () =>
+const { data: articles, error } = await useAsyncData(`learn-${category}`, () =>
   queryCollection('learn').where('category', '=', category).order('date', 'DESC').all()
 )
+
+if (error.value) {
+  throw createError({ statusCode: 500, message: '加载教程失败' })
+}
 
 const levels = [
   { label: '入门', value: 'beginner' },
@@ -43,7 +47,7 @@ const filteredArticles = computed(() => {
     <h1 class="mt-4 text-3xl font-bold">{{ categoryName }}</h1>
 
     <div class="mt-6">
-      <CategoryFilter v-model="levelFilter" :items="levels" />
+      <FilterPills v-model="levelFilter" :items="levels" />
     </div>
 
     <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">

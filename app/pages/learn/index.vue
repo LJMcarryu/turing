@@ -6,9 +6,13 @@ useSeoMeta({
 
 const levelFilter = ref('')
 
-const { data: articles } = await useAsyncData('learn-all', () =>
+const { data: articles, error } = await useAsyncData('learn-all', () =>
   queryCollection('learn').order('date', 'DESC').all()
 )
+
+if (error.value) {
+  throw createError({ statusCode: 500, message: '加载教程失败' })
+}
 
 const categories = [
   { label: 'Claude Code', value: 'claude-code', icon: 'lucide:terminal' },
@@ -50,7 +54,7 @@ const filteredArticles = computed(() => {
     <section class="mt-12">
       <div class="mb-6 flex items-center justify-between">
         <h2 class="text-xl font-bold">全部教程</h2>
-        <CategoryFilter v-model="levelFilter" :items="levels" />
+        <FilterPills v-model="levelFilter" :items="levels" />
       </div>
       <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <ContentCard

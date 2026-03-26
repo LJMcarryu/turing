@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @theme {
   --color-brand-bg: #0a0a0f;
@@ -10,8 +11,8 @@
   --color-brand-muted: #94a3b8;
   --color-brand-subtle: #64748b;
 
-  --font-sans: 'Inter', 'system-ui', '-apple-system', 'sans-serif';
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'monospace';
+  --font-sans: 'system-ui', '-apple-system', 'sans-serif';
+  --font-mono: 'ui-monospace', 'SFMono-Regular', 'monospace';
 }
 
 body {
@@ -19,32 +20,54 @@ body {
   color: var(--color-brand-text);
 }
 
-/* Prose styling for markdown content */
+/* Prose dark theme overrides for @tailwindcss/typography */
 .prose {
-  color: var(--color-brand-muted);
+  --tw-prose-body: var(--color-brand-muted);
+  --tw-prose-headings: var(--color-brand-text);
+  --tw-prose-links: var(--color-brand-primary);
+  --tw-prose-bold: var(--color-brand-text);
+  --tw-prose-code: var(--color-brand-primary);
+  --tw-prose-pre-bg: var(--color-brand-card);
+  --tw-prose-pre-code: var(--color-brand-muted);
+  --tw-prose-quotes: var(--color-brand-muted);
+  --tw-prose-quote-borders: var(--color-brand-border);
+  --tw-prose-counters: var(--color-brand-subtle);
+  --tw-prose-bullets: var(--color-brand-subtle);
+  --tw-prose-hr: var(--color-brand-border);
+  --tw-prose-th-borders: var(--color-brand-border);
+  --tw-prose-td-borders: var(--color-brand-border);
 }
 
-.prose h1, .prose h2, .prose h3, .prose h4 {
-  color: var(--color-brand-text);
-}
-
-.prose a {
-  color: var(--color-brand-primary);
-}
-.prose a:hover {
-  text-decoration: underline;
+.prose pre {
+  border: 1px solid var(--color-brand-border);
+  border-radius: 0.5rem;
 }
 
 .prose code {
   background-color: var(--color-brand-card);
-  color: var(--color-brand-primary);
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
   font-size: 0.875rem;
 }
 
-.prose pre {
-  background-color: var(--color-brand-card);
-  border: 1px solid var(--color-brand-border);
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/* Shared button style */
+.btn-primary {
+  display: inline-block;
   border-radius: 0.5rem;
+  background-image: linear-gradient(to right, var(--color-brand-primary), var(--color-brand-accent));
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  color: white;
+  transition: opacity 0.15s;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
 }

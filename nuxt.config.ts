@@ -17,6 +17,12 @@ export default defineNuxtConfig({
     },
   },
 
+  runtimeConfig: {
+    public: {
+      siteUrl: 'https://jmliu6.com',
+    },
+  },
+
   site: {
     url: 'https://jmliu6.com',
     name: 'Turing',
@@ -37,6 +43,7 @@ export default defineNuxtConfig({
 
   nitro: {
     prerender: {
+      crawlLinks: true,
       routes: ['/sitemap.xml', '/rss.xml'],
     },
   },
@@ -47,7 +54,7 @@ export default defineNuxtConfig({
     head: {
       htmlAttrs: { lang: 'zh-CN' },
       link: [
-        { rel: 'icon', href: '/favicon.ico' },
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'alternate', type: 'application/rss+xml', title: 'Turing RSS', href: '/rss.xml' },
       ],
     },

@@ -56,7 +56,7 @@ const { data: projects } = await useAsyncData('projects', () =>
           <ContentCard
             v-for="project in projects"
             :key="project.path"
-            :to="project.github || project.path"
+            :to="project.path"
             label="PROJECT"
             :title="project.title"
             :description="project.description"

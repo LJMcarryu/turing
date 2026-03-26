@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 const mobileMenuOpen = ref(false)
+
+const route = useRoute()
+watch(() => route.path, () => { mobileMenuOpen.value = false })
 </script>
 
 <template>
@@ -23,13 +26,13 @@ const mobileMenuOpen = ref(false)
         </NuxtLink>
         <NuxtLink
           to="/newsletter"
-          class="rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+          class="btn-primary px-4 py-1.5 text-sm"
         >
           Subscribe
         </NuxtLink>
       </nav>
 
-      <button class="md:hidden" @click="mobileMenuOpen = !mobileMenuOpen">
+      <button class="md:hidden" aria-label="切换菜单" @click="mobileMenuOpen = !mobileMenuOpen">
         <Icon :name="mobileMenuOpen ? 'lucide:x' : 'lucide:menu'" class="h-6 w-6" />
       </button>
     </div>
@@ -47,7 +50,7 @@ const mobileMenuOpen = ref(false)
         </NuxtLink>
         <NuxtLink
           to="/newsletter"
-          class="mt-2 rounded-lg bg-gradient-to-r from-brand-primary to-brand-accent px-4 py-2 text-center text-sm font-medium text-white"
+          class="btn-primary mt-2 px-4 py-2 text-center text-sm"
           @click="mobileMenuOpen = false"
         >
           Subscribe

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatDate } from '~/composables/useFormatDate'
+
 const route = useRoute()
 const { data: article } = await useAsyncData(route.path, () =>
   queryCollection('learn').path(route.path).first()
@@ -24,7 +26,7 @@ useSeoMeta({
       <div class="flex items-center gap-3">
         <LevelBadge :level="article.level" />
         <span class="text-sm text-brand-subtle">{{ article.readingTime }} min</span>
-        <span class="text-sm text-brand-subtle">{{ article.date }}</span>
+        <span class="text-sm text-brand-subtle">{{ formatDate(article.date) }}</span>
       </div>
       <h1 class="mt-3 text-3xl font-bold leading-tight">{{ article.title }}</h1>
       <p class="mt-2 text-lg text-brand-muted">{{ article.description }}</p>

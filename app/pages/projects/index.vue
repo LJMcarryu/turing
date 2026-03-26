@@ -4,9 +4,13 @@ useSeoMeta({
   description: '开源项目与工具',
 })
 
-const { data: projects } = await useAsyncData('projects-all', () =>
+const { data: projects, error } = await useAsyncData('projects-all', () =>
   queryCollection('projects').all()
 )
+
+if (error.value) {
+  throw createError({ statusCode: 500, message: '加载项目失败' })
+}
 </script>
 
 <template>
@@ -47,7 +51,7 @@ const { data: projects } = await useAsyncData('projects-all', () =>
           v-if="project.github"
           :href="project.github"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           class="mt-4 inline-flex items-center gap-1.5 text-sm text-brand-primary hover:underline"
         >
           <Icon name="lucide:github" class="h-4 w-4" />
