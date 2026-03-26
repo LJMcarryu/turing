@@ -5,10 +5,15 @@ export default defineNuxtConfig({
 
   modules: [
     '@nuxt/content',
-    '@nuxtjs/tailwindcss',
     '@nuxt/icon',
     '@nuxtjs/seo',
   ],
+
+  postcss: {
+    plugins: {
+      '@tailwindcss/postcss': {},
+    },
+  },
 
   site: {
     url: 'https://jmliu6.com',
@@ -34,13 +39,14 @@ export default defineNuxtConfig({
     },
   },
 
-  css: ['~/assets/css/main.css'],
+  css: ['./app/assets/css/main.css'],
 
   app: {
     head: {
       htmlAttrs: { lang: 'zh-CN' },
       link: [
         { rel: 'icon', href: '/favicon.ico' },
+        { rel: 'alternate', type: 'application/rss+xml', title: 'Turing RSS', href: '/rss.xml' },
       ],
     },
   },
