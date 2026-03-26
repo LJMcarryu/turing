@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+body {
+  @apply bg-brand-bg text-brand-text;
+}
+
+.prose {
+  @apply text-brand-muted;
+}
+
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  @apply text-brand-text;
+}
+
+.prose a {
+  @apply text-brand-primary hover:underline;
+}
+
+.prose code {
+  @apply bg-brand-card text-brand-primary px-1.5 py-0.5 rounded text-sm;
+}
+
+.prose pre {
+  @apply bg-brand-card border border-brand-border rounded-lg;
+}

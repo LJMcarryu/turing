@@ -1,0 +1,25 @@
+{
+  "name": "turing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.16.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@nuxt/content": "^3.12.0",
+    "@nuxt/icon": "^1.15.0",
+    "@nuxtjs/seo": "^5.0.1",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@tailwindcss/postcss": "^4.2.2",
+    "sql.js": "^1.14.1"
+  }
+}
