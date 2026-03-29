@@ -17,6 +17,8 @@
 - 🔍 **SEO 友好** - 完整的 meta 标签 + Open Graph + RSS 订阅
 - ♿ **无障碍** - 支持 prefers-reduced-motion + ARIA 标签
 - 🛠️ **开发体验** - TypeScript + ESLint + Prettier + Husky
+- 🧪 **测试完备** - Vitest 单元测试 + Playwright E2E 测试
+- 📊 **监控完善** - Sentry 错误追踪 + Web Vitals 性能监控
 
 ## 📦 技术栈
 
@@ -27,6 +29,8 @@
 - **SEO**: [@nuxtjs/seo](https://nuxtseo.com) - SEO 工具集
 - **图标**: [@nuxt/icon](https://github.com/nuxt/icon) - 图标组件
 - **代码质量**: ESLint + Prettier + Husky + lint-staged
+- **测试**: [Vitest](https://vitest.dev) - 单元测试 + [Playwright](https://playwright.dev) - E2E 测试
+- **监控**: [Sentry](https://sentry.io) - 错误追踪 + Web Vitals - 性能监控
 
 ## 🚀 快速开始
 
@@ -44,6 +48,10 @@ cd turing
 
 # 安装依赖
 npm install
+
+# 复制环境变量文件
+cp .env.example .env
+# 编辑 .env 文件，填入必要的配置
 ```
 
 ### 开发
@@ -60,6 +68,21 @@ npm run lint:fix
 
 # 类型检查
 npm run typecheck
+
+# 运行单元测试
+npm run test
+
+# 运行单元测试（UI 模式）
+npm run test:ui
+
+# 生成测试覆盖率报告
+npm run test:coverage
+
+# 运行 E2E 测试
+npm run test:e2e
+
+# 运行 E2E 测试（UI 模式）
+npm run test:e2e:ui
 ```
 
 ### 构建
