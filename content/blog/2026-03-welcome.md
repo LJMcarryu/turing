@@ -1,10 +1,11 @@
 ---
 title: "欢迎来到 Turing"
 description: "Turing 是什么，为什么创建它，以及未来的方向"
-tags: [announcement, turing]
+tags: [announcement, turing, ai]
 date: "2026-03-27"
 readingTime: 5
 featured: true
+cover: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop"
 ---
 
 # 欢迎来到 Turing

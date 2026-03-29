@@ -1,37 +1,76 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Newsletter — Turing',
-  description: '订阅 Turing Newsletter，获取最新 AI 技术实践文章和开源项目更新',
+  title: `${t('newsletter.title')} ${t('newsletter.titleHighlight')} — Turing`,
+  description: t('newsletter.description'),
 })
 </script>
 
 <template>
-  <div class="mx-auto max-w-xl px-4 py-20 text-center">
-    <h1 class="text-3xl font-bold">订阅 Newsletter</h1>
-    <p class="mt-4 text-brand-muted">
-      每周精选 AI 技术实践文章、开源项目更新和行业洞察，直达你的收件箱。
-    </p>
+  <div class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <section class="px-4 py-20">
+      <div class="mx-auto max-w-4xl">
+        <div class="text-center">
+          <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-primary to-brand-accent">
+            <Icon name="heroicons:envelope" class="h-10 w-10 text-white" />
+          </div>
+          <h1 class="text-5xl font-bold md:text-6xl">
+            {{ t('newsletter.title') }} <span class="text-gradient">{{ t('newsletter.titleHighlight') }}</span>
+          </h1>
+          <p class="mx-auto mt-6 max-w-2xl text-xl text-brand-muted">
+            {{ t('newsletter.description') }}
+          </p>
+        </div>
+      </div>
+    </section>
 
-    <div class="mt-8 flex justify-center">
-      <NewsletterForm />
-    </div>
+    <!-- Form -->
+    <section class="px-4 py-12">
+      <div class="mx-auto max-w-xl">
+        <div class="card p-8">
+          <NewsletterForm />
+        </div>
+      </div>
+    </section>
 
-    <div class="mt-12 text-left">
-      <h2 class="text-lg font-semibold">你会收到什么？</h2>
-      <ul class="mt-4 space-y-3 text-sm text-brand-muted">
-        <li class="flex items-start gap-3">
-          <Icon name="lucide:book-open" class="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
-          最新 AI 编程工具教程和实战指南
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="lucide:package" class="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
-          开源项目发布和更新通知
-        </li>
-        <li class="flex items-start gap-3">
-          <Icon name="lucide:trending-up" class="mt-0.5 h-4 w-4 shrink-0 text-brand-primary" />
-          AI 行业趋势解读和个人见解
-        </li>
-      </ul>
-    </div>
+    <!-- Benefits -->
+    <section class="px-4 py-12">
+      <div class="mx-auto max-w-4xl">
+        <h2 class="mb-8 text-center text-3xl font-bold">{{ t('newsletter.whatYouGet') }}</h2>
+        <div class="grid gap-6 md:grid-cols-3">
+          <div class="card p-6 text-center">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-primary/10">
+              <Icon name="heroicons:academic-cap" class="h-8 w-8 text-brand-primary" />
+            </div>
+            <h3 class="text-lg font-bold">{{ t('newsletter.benefits.tutorials.title') }}</h3>
+            <p class="mt-2 text-sm text-brand-muted">
+              {{ t('newsletter.benefits.tutorials.description') }}
+            </p>
+          </div>
+
+          <div class="card p-6 text-center">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-accent/10">
+              <Icon name="heroicons:cube" class="h-8 w-8 text-brand-accent" />
+            </div>
+            <h3 class="text-lg font-bold">{{ t('newsletter.benefits.updates.title') }}</h3>
+            <p class="mt-2 text-sm text-brand-muted">
+              {{ t('newsletter.benefits.updates.description') }}
+            </p>
+          </div>
+
+          <div class="card p-6 text-center">
+            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-secondary/10">
+              <Icon name="heroicons:chart-bar" class="h-8 w-8 text-brand-secondary" />
+            </div>
+            <h3 class="text-lg font-bold">{{ t('newsletter.benefits.insights.title') }}</h3>
+            <p class="mt-2 text-sm text-brand-muted">
+              {{ t('newsletter.benefits.insights.description') }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>

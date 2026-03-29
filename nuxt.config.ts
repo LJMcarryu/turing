@@ -9,7 +9,24 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxt/icon',
     '@nuxtjs/seo',
+    '@nuxtjs/i18n',
   ],
+
+  i18n: {
+    locales: [
+      { code: 'zh-CN', iso: 'zh-CN', file: 'zh-CN.json', name: '中文' },
+      { code: 'en-US', iso: 'en-US', file: 'en-US.json', name: 'English' },
+    ],
+    defaultLocale: 'zh-CN',
+    lazy: true,
+    langDir: 'locales',
+    strategy: 'prefix_except_default',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root',
+    },
+  },
 
   postcss: {
     plugins: {

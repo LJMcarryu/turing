@@ -1,7 +1,9 @@
 <script setup lang="ts">
+const { t } = useI18n()
+
 useSeoMeta({
-  title: 'Projects — Turing',
-  description: '开源项目与工具',
+  title: `${t('projects.title')} — Turing`,
+  description: t('projects.subtitle'),
 })
 
 const { data: projects, error } = await useAsyncData('projects-all', () =>
@@ -9,59 +11,89 @@ const { data: projects, error } = await useAsyncData('projects-all', () =>
 )
 
 if (error.value) {
-  throw createError({ statusCode: 500, message: '加载项目失败' })
+  throw createError({ statusCode: 500, message: t('error.loadFailed') })
 }
 </script>
 
 <template>
-  <div class="mx-auto max-w-6xl px-4 py-12">
-    <h1 class="text-3xl font-bold">Projects</h1>
-    <p class="mt-2 text-brand-muted">开源项目与工具</p>
-
-    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <div
-        v-for="project in projects"
-        :key="project.path"
-        class="rounded-xl border border-brand-border bg-brand-card p-6"
-      >
-        <div class="mb-2 flex items-center gap-2">
-          <span
-            class="inline-block rounded-full px-2 py-0.5 text-xs font-medium"
-            :class="{
-              'bg-green-500/10 text-green-400': project.status === 'active',
-              'bg-yellow-500/10 text-yellow-400': project.status === 'wip',
-              'bg-gray-500/10 text-gray-400': project.status === 'archived',
-            }"
-          >
-            {{ project.status }}
-          </span>
+  <div class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <section class="px-4 py-20">
+      <div class="mx-auto max-w-6xl">
+        <div class="text-center">
+          <h1 class="text-5xl font-bold md:text-6xl">
+            <span class="text-gradient">{{ t('projects.title') }}</span>
+          </h1>
+          <p class="mx-auto mt-4 max-w-2xl text-xl text-brand-muted">
+            {{ t('projects.subtitle') }}
+          </p>
         </div>
-        <h3 class="text-lg font-semibold">{{ project.title }}</h3>
-        <p class="mt-1.5 text-sm text-brand-muted">{{ project.description }}</p>
-        <div class="mt-4 flex flex-wrap gap-2">
-          <span
-            v-for="tag in project.tags"
-            :key="tag"
-            class="rounded-full border border-brand-border px-2 py-0.5 text-xs text-brand-subtle"
-          >
-            {{ tag }}
-          </span>
-        </div>
-        <a
-          v-if="project.github"
-          :href="project.github"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="mt-4 inline-flex items-center gap-1.5 text-sm text-brand-primary hover:underline"
-        >
-          <Icon name="lucide:github" class="h-4 w-4" />
-          GitHub
-        </a>
       </div>
-    </div>
+    </section>
 
-    <p v-if="!projects?.length" class="py-12 text-center text-brand-subtle">
-      暂无项目
-    </p>
+    <!-- Projects Grid -->
+    <section class="px-4 py-12">
+      <div class="mx-auto max-w-6xl">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <NuxtLink
+            v-for="(project, index) in projects"
+            :key="project.path"
+            :to="project.path"
+            class="card group p-6"
+            :style="{ animationDelay: `${index * 100}ms` }"
+          >
+            <!-- Status Badge -->
+            <div class="mb-4 flex items-center justify-between">
+              <span
+                class="rounded-full px-3 py-1 text-xs font-bold uppercase"
+                :class="{
+                  'bg-brand-primary/10 text-brand-primary': project.status === 'active',
+                  'bg-brand-secondary/10 text-brand-secondary': project.status === 'wip',
+                  'bg-brand-subtle/10 text-brand-subtle': project.status === 'archived',
+                }"
+              >
+                {{ t(`projects.status.${project.status}`) }}
+              </span>
+              <Icon
+                v-if="project.github"
+                name="heroicons:arrow-top-right-on-square"
+                class="h-5 w-5 text-brand-subtle transition-colors group-hover:text-brand-primary"
+              />
+            </div>
+
+            <!-- Title & Description -->
+            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
+              {{ project.title }}
+            </h3>
+            <p class="mt-3 line-clamp-3 text-sm text-brand-muted">
+              {{ project.description }}
+            </p>
+
+            <!-- Tags -->
+            <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
+              <span
+                v-for="tag in project.tags.slice(0, 4)"
+                :key="tag"
+                class="rounded-md bg-brand-surface px-2 py-1 text-xs text-brand-subtle"
+              >
+                {{ tag }}
+              </span>
+            </div>
+
+            <!-- GitHub Link -->
+            <div v-if="project.github" class="mt-4 flex items-center gap-2 text-sm text-brand-primary">
+              <Icon name="heroicons:code-bracket" class="h-4 w-4" />
+              <span class="font-semibold">{{ t('common.viewSource') }}</span>
+            </div>
+          </NuxtLink>
+        </div>
+
+        <!-- Empty State -->
+        <div v-if="!projects?.length" class="py-20 text-center">
+          <Icon name="heroicons:cube" class="mx-auto h-16 w-16 text-brand-subtle" />
+          <p class="mt-4 text-brand-muted">{{ t('projects.noProjects') }}</p>
+        </div>
+      </div>
+    </section>
   </div>
 </template>

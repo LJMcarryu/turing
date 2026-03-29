@@ -1,7 +1,13 @@
-export function formatDate(dateStr: string): string {
-  return new Date(dateStr).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
+export function useFormatDate() {
+  const { locale } = useI18n()
+
+  const formatDate = (dateStr: string): string => {
+    return new Date(dateStr).toLocaleDateString(locale.value, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  }
+
+  return { formatDate }
 }

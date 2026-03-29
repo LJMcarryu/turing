@@ -1,57 +1,90 @@
 <script setup lang="ts">
+const { t } = useI18n()
 const appConfig = useAppConfig()
 
 useSeoMeta({
-  title: 'About — Turing',
-  description: '关于 Turing 和 Jimmy Liu',
+  title: `${t('about.title')} — Turing`,
+  description: t('site.description'),
 })
 </script>
 
 <template>
-  <div class="mx-auto max-w-3xl px-4 py-12">
-    <h1 class="text-3xl font-bold">About</h1>
-
-    <div class="mt-8 space-y-6 text-brand-muted">
-      <p>
-        你好，我是 <strong class="text-brand-text">Jimmy Liu</strong>，Turing 的创建者。
-      </p>
-
-      <p>
-        <strong class="text-brand-text">Turing</strong> 是一个聚焦 AI 技术实践的个人品牌。
-        我相信 AI 正在重塑软件开发的方式，而掌握 AI 工具将成为每个开发者的核心竞争力。
-      </p>
-
-      <p>
-        在这里，你可以找到：
-      </p>
-
-      <ul class="list-inside list-disc space-y-2">
-        <li><strong class="text-brand-text">Learn</strong> — 从入门到专业的 AI 技术教程</li>
-        <li><strong class="text-brand-text">Projects</strong> — 我的开源项目和工具</li>
-        <li><strong class="text-brand-text">Blog</strong> — AI 行业洞察和实践分享</li>
-      </ul>
-
-      <p>
-        如果你也对 AI 技术感兴趣，欢迎
-        <NuxtLink to="/newsletter" class="text-brand-primary hover:underline">订阅 Newsletter</NuxtLink>
-        获取最新更新。
-      </p>
-    </div>
-
-    <div class="mt-12 rounded-xl border border-brand-border bg-brand-card p-6">
-      <h2 class="text-lg font-semibold">联系方式</h2>
-      <div class="mt-4 space-y-2 text-sm text-brand-muted">
-        <a
-          v-if="appConfig.social.github"
-          :href="appConfig.social.github"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="flex items-center gap-2 hover:text-brand-text"
-        >
-          <Icon name="lucide:github" class="h-4 w-4" />
-          GitHub
-        </a>
+  <div class="gradient-bg min-h-screen">
+    <!-- Header -->
+    <section class="px-4 py-20">
+      <div class="mx-auto max-w-4xl">
+        <div class="text-center">
+          <h1 class="text-5xl font-bold md:text-6xl">
+            <span class="text-gradient">{{ t('about.title') }}</span>
+          </h1>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Content -->
+    <section class="px-4 py-12">
+      <div class="mx-auto max-w-3xl">
+        <div class="card p-8 md:p-12">
+          <div class="space-y-6 text-base leading-relaxed text-brand-muted">
+            <p class="text-xl text-brand-text">
+              {{ t('about.greeting') }} <span class="text-gradient font-bold">Jimmy Liu</span>，Turing {{ t('about.greeting') === '你好，我是' ? '的创建者。' : "'s creator." }}
+            </p>
+
+            <p>
+              <strong class="text-brand-text">Turing</strong> {{ t('about.intro') }}
+            </p>
+
+            <div class="my-8 border-l-4 border-brand-primary bg-brand-surface p-6">
+              <h2 class="mb-4 text-lg font-bold text-brand-text">{{ t('about.findHere') }}</h2>
+              <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                  <Icon name="heroicons:academic-cap" class="mt-1 h-5 w-5 shrink-0 text-brand-primary" />
+                  <div>
+                    <strong class="text-brand-text">{{ t('nav.learn') }}</strong>
+                    <span class="text-brand-muted"> — {{ t('about.learnDesc') }}</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <Icon name="heroicons:cube" class="mt-1 h-5 w-5 shrink-0 text-brand-accent" />
+                  <div>
+                    <strong class="text-brand-text">{{ t('nav.projects') }}</strong>
+                    <span class="text-brand-muted"> — {{ t('about.projectsDesc') }}</span>
+                  </div>
+                </li>
+                <li class="flex items-start gap-3">
+                  <Icon name="heroicons:document-text" class="mt-1 h-5 w-5 shrink-0 text-brand-secondary" />
+                  <div>
+                    <strong class="text-brand-text">{{ t('nav.blog') }}</strong>
+                    <span class="text-brand-muted"> — {{ t('about.blogDesc') }}</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <p>
+              {{ t('about.subscribePrompt') }}
+              <NuxtLink to="/newsletter" class="text-brand-primary hover:underline">{{ t('about.subscribeLink') }}</NuxtLink>
+              {{ t('about.subscribeEnd') }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Contact Card -->
+        <div class="card mt-8 p-8">
+          <h2 class="text-2xl font-bold">{{ t('about.contact') }}</h2>
+          <div class="mt-6 flex gap-4">
+            <a
+              v-if="appConfig.social.github"
+              :href="appConfig.social.github"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-surface text-brand-muted transition-all hover:bg-brand-primary hover:text-brand-bg"
+            >
+              <Icon name="heroicons:code-bracket" class="h-6 w-6" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>

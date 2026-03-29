@@ -1,0 +1,150 @@
+{
+  "site": {
+    "name": "Turing",
+    "slogan": "Knowledge Base & Toolbox for AI Practitioners",
+    "description": "Knowledge Base & Toolbox for AI Practitioners"
+  },
+  "nav": {
+    "learn": "Learn",
+    "projects": "Projects",
+    "blog": "Blog",
+    "about": "About",
+    "subscribe": "Subscribe",
+    "navigation": "Navigation",
+    "followMe": "Follow Me",
+    "home": "Home"
+  },
+  "common": {
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "backToHome": "Back to Home",
+    "menu": "Menu",
+    "close": "Close",
+    "allRightsReserved": "All rights reserved",
+    "all": "All",
+    "readingTime": "minutes",
+    "min": "min",
+    "updated": "Updated",
+    "tags": "tags",
+    "viewSource": "View Source",
+    "backTo": "Back to",
+    "loading": "Loading",
+    "error": "Error"
+  },
+  "error": {
+    "notFound": "Page Not Found",
+    "serverError": "Server Error",
+    "loadFailed": "Load Failed"
+  },
+  "home": {
+    "hero": {
+      "title": "Knowledge Base & Toolbox for AI Practitioners",
+      "subtitle": "Explore AI Programming Tools · Share Practical Experience · Build Open Source Projects",
+      "startLearning": "Start Learning",
+      "exploreProjects": "Explore Projects"
+    },
+    "learn": {
+      "title": "AI Programming Practice",
+      "subtitle": "Structured tutorials from beginner to expert",
+      "badge": "LEARN"
+    },
+    "projects": {
+      "title": "Open Source Projects",
+      "subtitle": "Practical tools and innovative experiments",
+      "badge": "PROJECT"
+    },
+    "blog": {
+      "title": "Latest Insights",
+      "subtitle": "AI industry observations and technical thinking",
+      "badge": "BLOG"
+    },
+    "newsletter": {
+      "title": "Subscribe",
+      "titleHighlight": "Newsletter",
+      "description": "Get the latest AI technical practice articles, open source project updates and industry insights"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "AI Industry Insights & Practice Sharing",
+    "noArticles": "No articles yet",
+    "noArticlesWithTag": "No articles found with tag \"{tag}\"",
+    "relatedArticles": "Related Articles"
+  },
+  "learn": {
+    "title": "Learn",
+    "subtitle": "Systematically learn AI technology from beginner to professional",
+    "learningPath": "Learning Path",
+    "allTutorials": "All Tutorials",
+    "tutorialList": "Tutorial List",
+    "noTutorials": "No tutorials yet",
+    "noTutorialsLevel": "No tutorials at this level",
+    "relatedTutorials": "Related Tutorials",
+    "categories": {
+      "claude-code": "Claude Code",
+      "prompt-engineering": "Prompt Engineering",
+      "agent-development": "Agent Development",
+      "mcp": "MCP Protocol"
+    },
+    "levels": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "Open Source Projects & Practical Tools",
+    "noProjects": "No projects yet",
+    "otherProjects": "Other Projects",
+    "status": {
+      "active": "Active",
+      "wip": "In Development",
+      "archived": "Archived"
+    }
+  },
+  "about": {
+    "title": "About",
+    "greeting": "Hello, I'm",
+    "intro": "is a personal brand focused on AI technology practice. I believe AI is reshaping the way software is developed, and mastering AI tools will become a core competency for every developer.",
+    "findHere": "Here you can find:",
+    "learnDesc": "AI technology tutorials from beginner to professional",
+    "projectsDesc": "My open source projects and tools",
+    "blogDesc": "AI industry insights and practice sharing",
+    "subscribePrompt": "If you're also interested in AI technology, welcome to",
+    "subscribeLink": "subscribe to the Newsletter",
+    "subscribeEnd": "to get the latest updates.",
+    "contact": "Contact"
+  },
+  "newsletter": {
+    "title": "Subscribe",
+    "titleHighlight": "Newsletter",
+    "description": "Weekly curated AI technical practice articles, open source project updates and industry insights, delivered to your inbox",
+    "whatYouGet": "What will you receive?",
+    "benefits": {
+      "tutorials": {
+        "title": "Technical Tutorials",
+        "description": "Latest AI programming tool tutorials and practical guides"
+      },
+      "updates": {
+        "title": "Project Updates",
+        "description": "Open source project releases and update notifications"
+      },
+      "insights": {
+        "title": "Industry Insights",
+        "description": "AI industry trend analysis and personal insights"
+      }
+    },
+    "form": {
+      "placeholder": "your{'@'}email.com",
+      "subscribe": "Subscribe",
+      "subscribed": "Subscribed",
+      "loading": "...",
+      "success": "Thank you for subscribing! We'll send the latest content to your inbox.",
+      "error": "Subscription failed, please try again later."
+    }
+  },
+  "footer": {
+    "subscribeNewsletter": "Subscribe Newsletter"
+  }
+}

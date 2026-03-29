@@ -1,0 +1,150 @@
+{
+  "site": {
+    "name": "Turing",
+    "slogan": "AI 技术实践者的知识库与工具箱",
+    "description": "AI 技术实践者的知识库与工具箱"
+  },
+  "nav": {
+    "learn": "学习",
+    "projects": "项目",
+    "blog": "博客",
+    "about": "关于",
+    "subscribe": "订阅",
+    "navigation": "导航",
+    "followMe": "关注我",
+    "home": "首页"
+  },
+  "common": {
+    "readMore": "阅读更多",
+    "viewAll": "查看全部",
+    "backToHome": "返回首页",
+    "menu": "菜单",
+    "close": "关闭",
+    "allRightsReserved": "版权所有",
+    "all": "全部",
+    "readingTime": "分钟",
+    "min": "min",
+    "updated": "更新于",
+    "tags": "标签",
+    "viewSource": "查看源码",
+    "backTo": "返回",
+    "loading": "加载中",
+    "error": "错误"
+  },
+  "error": {
+    "notFound": "页面未找到",
+    "serverError": "服务器错误",
+    "loadFailed": "加载失败"
+  },
+  "home": {
+    "hero": {
+      "title": "AI 技术实践者的知识库与工具箱",
+      "subtitle": "探索 AI 编程工具前沿 · 分享实践经验 · 构建开源项目",
+      "startLearning": "开始学习",
+      "exploreProjects": "探索项目"
+    },
+    "learn": {
+      "title": "AI 编程实践",
+      "subtitle": "从入门到精通的结构化教程",
+      "badge": "LEARN"
+    },
+    "projects": {
+      "title": "开源项目",
+      "subtitle": "实用工具与创新实验",
+      "badge": "PROJECT"
+    },
+    "blog": {
+      "title": "最新洞察",
+      "subtitle": "AI 行业观察与技术思考",
+      "badge": "BLOG"
+    },
+    "newsletter": {
+      "title": "订阅",
+      "titleHighlight": "Newsletter",
+      "description": "获取最新的 AI 技术实践文章、开源项目更新和行业洞察"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "AI 行业洞察与实践分享",
+    "noArticles": "暂无文章",
+    "noArticlesWithTag": "没有找到标签为 \"{tag}\" 的文章",
+    "relatedArticles": "相关文章"
+  },
+  "learn": {
+    "title": "Learn",
+    "subtitle": "从入门到专业，系统学习 AI 技术",
+    "learningPath": "学习路径",
+    "allTutorials": "全部教程",
+    "tutorialList": "教程列表",
+    "noTutorials": "暂无教程",
+    "noTutorialsLevel": "暂无此级别的教程",
+    "relatedTutorials": "相关教程",
+    "categories": {
+      "claude-code": "Claude Code",
+      "prompt-engineering": "Prompt Engineering",
+      "agent-development": "Agent 开发",
+      "mcp": "MCP 协议"
+    },
+    "levels": {
+      "beginner": "入门",
+      "intermediate": "进阶",
+      "advanced": "专业"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "subtitle": "开源项目与实用工具",
+    "noProjects": "暂无项目",
+    "otherProjects": "其他项目",
+    "status": {
+      "active": "活跃",
+      "wip": "开发中",
+      "archived": "已归档"
+    }
+  },
+  "about": {
+    "title": "About",
+    "greeting": "你好，我是",
+    "intro": "是一个聚焦 AI 技术实践的个人品牌。我相信 AI 正在重塑软件开发的方式，而掌握 AI 工具将成为每个开发者的核心竞争力。",
+    "findHere": "在这里，你可以找到：",
+    "learnDesc": "从入门到专业的 AI 技术教程",
+    "projectsDesc": "我的开源项目和工具",
+    "blogDesc": "AI 行业洞察和实践分享",
+    "subscribePrompt": "如果你也对 AI 技术感兴趣，欢迎",
+    "subscribeLink": "订阅 Newsletter",
+    "subscribeEnd": "获取最新更新。",
+    "contact": "联系方式"
+  },
+  "newsletter": {
+    "title": "订阅",
+    "titleHighlight": "Newsletter",
+    "description": "每周精选 AI 技术实践文章、开源项目更新和行业洞察，直达你的收件箱",
+    "whatYouGet": "你会收到什么？",
+    "benefits": {
+      "tutorials": {
+        "title": "技术教程",
+        "description": "最新 AI 编程工具教程和实战指南"
+      },
+      "updates": {
+        "title": "项目更新",
+        "description": "开源项目发布和更新通知"
+      },
+      "insights": {
+        "title": "行业洞察",
+        "description": "AI 行业趋势解读和个人见解"
+      }
+    },
+    "form": {
+      "placeholder": "your{'@'}email.com",
+      "subscribe": "订阅",
+      "subscribed": "已订阅",
+      "loading": "...",
+      "success": "感谢订阅！我们会将最新内容发送到你的邮箱。",
+      "error": "订阅失败，请稍后再试。"
+    }
+  },
+  "footer": {
+    "subscribeNewsletter": "订阅 Newsletter"
+  }
+}
