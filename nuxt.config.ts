@@ -37,6 +37,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       siteUrl: 'https://jmliu6.com',
+      sentryDsn: process.env.NUXT_PUBLIC_SENTRY_DSN || '',
     },
   },
 
@@ -77,6 +78,17 @@ export default defineNuxtConfig({
   },
 
   css: ['~/assets/css/main.css'],
+
+  vite: {
+    build: {
+      sourcemap: false,
+    },
+    server: {
+      fs: {
+        strict: false,
+      },
+    },
+  },
 
   app: {
     head: {

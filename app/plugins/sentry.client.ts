@@ -1,27 +1,36 @@
 import * as Sentry from '@sentry/nuxt'
 
-Sentry.init({
-  dsn: process.env.NUXT_PUBLIC_SENTRY_DSN,
+export default defineNuxtPlugin(() => {
+  // Only initialize if DSN is provided
+  const dsn = useRuntimeConfig().public.sentryDsn || process.env.NUXT_PUBLIC_SENTRY_DSN
 
-  // Performance Monitoring
-  tracesSampleRate: 1.0, // Capture 100% of transactions in development
-  // Set sampling rate for production in environment variables
+  if (!dsn) {
+    console.warn('[Sentry] No DSN provided, skipping initialization')
+    return
+  }
 
-  // Session Replay
-  replaysSessionSampleRate: 0.1, // 10% of sessions
-  replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
+  Sentry.init({
+    dsn,
 
-  // Environment
-  environment: process.env.NODE_ENV || 'development',
+    // Performance Monitoring
+    tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
 
-  // Enable debug mode in development
-  debug: process.env.NODE_ENV === 'development',
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // 10% of sessions
+    replaysOnErrorSampleRate: 1.0, // 100% of sessions with errors
 
-  // Integrations
-  integrations: [
-    Sentry.replayIntegration({
-      maskAllText: true,
-      blockAllMedia: true,
-    }),
-  ],
+    // Environment
+    environment: process.env.NODE_ENV || 'development',
+
+    // Enable debug mode in development
+    debug: process.env.NODE_ENV === 'development',
+
+    // Integrations
+    integrations: [
+      Sentry.replayIntegration({
+        maskAllText: true,
+        blockAllMedia: true,
+      }),
+    ],
+  })
 })
