@@ -88,6 +88,13 @@ export default defineNuxtConfig({
         strict: false,
       },
     },
+    optimizeDeps: {
+      exclude: ['@unhead/schema-org', '@sentry/nuxt'],
+      include: ['preact', 'preact/hooks'],
+    },
+    resolve: {
+      dedupe: ['vue', 'preact'],
+    },
   },
 
   app: {
