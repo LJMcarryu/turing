@@ -1,5 +1,6 @@
 export default defineNuxtPlugin(() => {
-  if (typeof window === 'undefined') return
+  if (typeof window === 'undefined')
+    return
 
   // Web Vitals monitoring
   const reportWebVitals = (metric: any) => {
@@ -9,8 +10,8 @@ export default defineNuxtPlugin(() => {
     }
 
     // Send to analytics in production
-    if (process.env.NODE_ENV === 'production' && window.gtag) {
-      window.gtag('event', metric.name, {
+    if (process.env.NODE_ENV === 'production' && (window as any).gtag) {
+      (window as any).gtag('event', metric.name, {
         value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
         event_category: 'Web Vitals',
         event_label: metric.id,
@@ -20,11 +21,14 @@ export default defineNuxtPlugin(() => {
   }
 
   // Dynamically import web-vitals
-  import('web-vitals').then(({ onCLS, onFID, onFCP, onLCP, onTTFB }) => {
+  // Note: onFID is deprecated, use onINP instead
+  import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
     onCLS(reportWebVitals)
-    onFID(reportWebVitals)
+    onINP(reportWebVitals) // Interaction to Next Paint (replaces FID)
     onFCP(reportWebVitals)
     onLCP(reportWebVitals)
     onTTFB(reportWebVitals)
+  }).catch((error) => {
+    console.error('[Web Vitals] Failed to load:', error)
   })
 })
