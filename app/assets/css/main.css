@@ -81,9 +81,8 @@
   --cobalt-soft: oklch(0.3 0.06 258);
   --amber: oklch(0.8 0.135 72);
   --amber-deep: oklch(0.66 0.13 72);
-  /* 反白板块用 */
-  --ink-dark: oklch(0.985 0.003 80); /* Newsletter 亮卡底 */
-  --paper-dark: oklch(0.16 0.011 255); /* 亮卡上的文字 */
+  /* --ink-dark / --paper-dark 不在此重定义：保持全局深底/亮字，
+     让 footer 等「深色岛屿」在 noir 下依然是深色（首页已整页暗场） */
   color-scheme: dark;
   background: var(--paper);
   color: var(--ink);

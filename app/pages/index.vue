@@ -10,6 +10,12 @@ useSeoMeta({
   ogType: 'website',
 })
 
+// 首页整页暗场：把 noir 主题挂到 <body>，让顶部导航、页脚、最外层背景
+// 也统一进暗黑（仅首页生效，离开本页自动移除，不影响其它亮场页）
+useHead({
+  bodyAttrs: { 'data-theme': 'noir' },
+})
+
 const { data: featuredLearn } = await useAsyncData('featured-learn', () =>
   queryCollection('learn').where('featured', '=', true).limit(4).all(),
 )
@@ -217,7 +223,7 @@ onMounted(() => {
     <!-- ============== NEWSLETTER ============== -->
     <section class="py-24">
       <div class="mx-auto max-w-[1320px] px-6">
-        <div class="news-card md:grid md:grid-cols-12 md:gap-x-12 p-10 md:p-16">
+        <div class="border border-[var(--rule)] bg-[var(--paper-2)] md:grid md:grid-cols-12 md:gap-x-12 p-10 md:p-16">
           <div class="md:col-span-6">
             <p class="kicker mb-4 text-[var(--cobalt)]">A letter, on occasion</p>
             <h2 class="mag-1 mag-cjk">{{ t('home.newsletter.title') }} <span class="mag-italic text-[var(--cobalt)]">{{ t('home.newsletter.titleHighlight') }}</span></h2>
@@ -297,22 +303,5 @@ onMounted(() => {
 .grid {
   position: relative;
   z-index: 1;
-}
-
-/* Newsletter 明度反转亮卡 */
-.news-card {
-  --paper: oklch(0.985 0.003 80);
-  --ink: oklch(0.16 0.011 255);
-  --ink-soft: oklch(0.4 0.012 255);
-  --rule: oklch(0.88 0.006 80);
-  --cobalt: oklch(0.45 0.18 258);
-  background: var(--paper);
-  color: var(--ink);
-  box-shadow: 0 40px 80px -40px oklch(0 0 0 / 0.6);
-  border-radius: 2px;
-}
-.news-card ::selection {
-  background: var(--cobalt);
-  color: var(--paper);
 }
 </style>
