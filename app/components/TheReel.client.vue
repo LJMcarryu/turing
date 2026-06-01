@@ -53,6 +53,14 @@ function onScroll() {
   })
   idx.value = best
 }
+// 竖向滚轮 → 横向滚动（Lenis 接管了页面 wheel，这里让卷宗带原生滚动）
+function onWheel(e: WheelEvent) {
+  const el = track.value
+  if (!el) return
+  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return // 横向手势/触控板走原生
+  el.scrollLeft += e.deltaY
+  e.preventDefault()
+}
 const tc = computed(
   () => `${String(idx.value + 1).padStart(2, '0')} / ${String(props.items.length).padStart(2, '0')}`,
 )
@@ -77,7 +85,15 @@ const tc = computed(
       </button>
     </div>
 
-    <div v-if="mode === 'reel'" ref="track" class="reel-track" role="list" @scroll.passive="onScroll">
+    <div
+      v-if="mode === 'reel'"
+      ref="track"
+      class="reel-track"
+      role="list"
+      data-lenis-prevent
+      @scroll.passive="onScroll"
+      @wheel="onWheel"
+    >
       <NuxtLink
         v-for="(it, i) in items"
         :key="it.path"
@@ -99,7 +115,7 @@ const tc = computed(
 
     <div v-if="mode === 'reel'" class="reel-ruler machine" aria-hidden="true">
       <span>FPS 24</span>
-      <span>← / → · drag</span>
+      <span>滚轮 / ← →</span>
       <span>TC {{ tc }}</span>
     </div>
 
