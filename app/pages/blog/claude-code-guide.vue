@@ -518,10 +518,6 @@ jobs:
             <span>💻</span>
             <span>GitHub</span>
           </a>
-          <NuxtLink to="/newsletter" class="btn-primary inline-flex items-center gap-2">
-            <span>📬</span>
-            <span>订阅更新</span>
-          </NuxtLink>
         </div>
       </div>
     </section>

@@ -41,11 +41,6 @@ const year = new Date().getFullYear()
                 GitHub ↗
               </a>
             </li>
-            <li>
-              <NuxtLink to="/newsletter" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">
-                {{ t('footer.subscribeNewsletter') }} →
-              </NuxtLink>
-            </li>
           </ul>
         </div>
       </div>

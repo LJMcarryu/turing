@@ -227,22 +227,6 @@ onMounted(() => {
         </NuxtLink>
       </div>
     </section>
-
-    <!-- ============== NEWSLETTER ============== -->
-    <section class="py-24">
-      <div class="mx-auto max-w-[1536px] px-6">
-        <div class="border border-[var(--rule)] bg-[var(--paper-2)] md:grid md:grid-cols-12 md:gap-x-12 p-10 md:p-16">
-          <div class="md:col-span-6">
-            <p class="kicker mb-4 text-[var(--cobalt)]">A letter, on occasion</p>
-            <h2 class="mag-1 mag-cjk">{{ t('home.newsletter.title') }} <span class="mag-italic text-[var(--cobalt)]">{{ t('home.newsletter.titleHighlight') }}</span></h2>
-          </div>
-          <div class="md:col-span-6 md:pl-8 md:border-l md:border-[var(--rule)]">
-            <p class="dek mb-8">{{ t('home.newsletter.description') }}</p>
-            <NewsletterForm />
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 

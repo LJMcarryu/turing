@@ -69,12 +69,6 @@ const portrait = useArticleImage('about-jimmy-portrait', 'portrait')
               </NuxtLink>
             </li>
           </ol>
-
-          <hr class="rule my-12">
-          <p class="dek">
-            {{ t('about.subscribePrompt') }}
-            <NuxtLink to="/newsletter" class="link-ed">{{ t('about.subscribeLink') }}</NuxtLink>{{ t('about.subscribeEnd') }}
-          </p>
         </div>
 
         <aside class="md:col-span-4">

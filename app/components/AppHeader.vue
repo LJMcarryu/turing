@@ -48,13 +48,7 @@ const issue = computed(() => {
           >
             {{ item.label }}
           </NuxtLink>
-
-          <span class="h-4 w-px bg-[var(--rule)]"></span>
-
-          <NuxtLink to="/newsletter" class="btn-ink text-sm">
-            {{ t('nav.subscribe') }}
-          </NuxtLink>
-        </nav>
+</nav>
 
         <button
           class="border border-[var(--ink)] px-3 py-1.5 text-sm font-semibold md:hidden"
@@ -86,11 +80,7 @@ const issue = computed(() => {
           >
             {{ item.label }}
           </NuxtLink>
-
-          <NuxtLink to="/newsletter" class="btn-ink mt-2 self-start" @click="mobileMenuOpen = false">
-            {{ t('nav.subscribe') }}
-          </NuxtLink>
-        </nav>
+</nav>
       </div>
     </Transition>
   </header>

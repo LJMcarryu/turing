@@ -1,11 +1,11 @@
 ---
-title: "欢迎来到 Turing"
-description: "Turing 是什么，为什么创建它，以及未来的方向"
+title: '欢迎来到 Turing'
+description: 'Turing 是什么，为什么创建它，以及未来的方向'
 tags: [announcement, turing, ai]
-date: "2026-03-27"
+date: '2026-03-27'
 readingTime: 5
 featured: true
-cover: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop"
+cover: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop'
 ---
 
 # 欢迎来到 Turing
@@ -24,4 +24,4 @@ Alan Turing 是计算机科学和人工智能的奠基人之一。用他的名�
 
 ## 接下来
 
-我会持续发布高质量的 AI 技术内容。如果你也对 AI 技术感兴趣，欢迎订阅 Newsletter，第一时间获取更新。
+我会持续发布高质量的 AI 技术内容。如果你也对 AI 技术感兴趣，欢迎常来看看。
