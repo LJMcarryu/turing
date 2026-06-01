@@ -38,7 +38,8 @@
   },
   "home": {
     "hero": {
-      "title": "AI 技术实践者的知识库与工具箱",
+      "title": "以意图，构建机器之思",
+      "eyebrow": "AI 技术实践者的知识库与工具箱",
       "subtitle": "探索 AI 编程工具前沿 · 分享实践经验 · 构建开源项目",
       "startLearning": "开始学习",
       "exploreProjects": "探索项目"

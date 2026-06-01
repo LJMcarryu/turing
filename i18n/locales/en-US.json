@@ -38,7 +38,8 @@
   },
   "home": {
     "hero": {
-      "title": "Knowledge Base & Toolbox for AI Practitioners",
+      "title": "Build with intent",
+      "eyebrow": "Knowledge Base & Toolbox for AI Practitioners",
       "subtitle": "Explore AI Programming Tools · Share Practical Experience · Build Open Source Projects",
       "startLearning": "Start Learning",
       "exploreProjects": "Explore Projects"
