@@ -30,7 +30,7 @@ const issue = computed(() => {
   <header class="relative z-50 bg-[var(--paper)]">
     <!-- Top thin masthead bar -->
     <div class="border-b border-[var(--rule)]">
-      <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-6 py-2">
+      <div class="mx-auto flex max-w-[1536px] items-center justify-between gap-3 px-6 py-2">
         <span class="meta">{{ t('site.slogan') }}</span>
         <span class="meta hidden sm:inline">{{ issue }}</span>
         <span class="meta">CN · EN</span>
@@ -39,7 +39,7 @@ const issue = computed(() => {
 
     <!-- Main row -->
     <div class="border-b border-[var(--ink)]">
-      <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-5">
+      <div class="mx-auto flex max-w-[1536px] items-center justify-between gap-6 px-6 py-5">
         <NuxtLink to="/" class="font-display text-3xl font-medium leading-none tracking-tight md:text-4xl">
           {{ appConfig.site.name }}<span class="italic font-normal">.</span>
         </NuxtLink>

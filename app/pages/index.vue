@@ -74,7 +74,7 @@ onMounted(() => {
   <div data-theme="noir">
     <!-- ============== COVER ============== -->
     <section class="border-b border-[var(--rule)]">
-      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-6 pb-0 md:grid-cols-12 md:gap-x-10 md:pt-10">
+      <div class="mx-auto grid max-w-[1536px] grid-cols-1 gap-0 px-6 pt-6 pb-0 md:grid-cols-12 md:gap-x-10 md:pt-10">
         <!-- Text column -->
         <div class="md:col-span-7 md:pr-6">
           <div class="c-in mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3" style="--i: 0">
@@ -111,7 +111,7 @@ onMounted(() => {
     </section>
 
     <!-- ============== LEARN ============== -->
-    <section v-if="featuredLearn?.length" class="relative overflow-clip mx-auto max-w-[1320px] px-6 py-24">
+    <section v-if="featuredLearn?.length" class="relative overflow-clip mx-auto max-w-[1536px] px-6 py-24">
       <span aria-hidden="true" class="ghost-num">01</span>
       <div class="section-head mb-12">
         <div>
@@ -169,9 +169,9 @@ onMounted(() => {
       </div>
     </section>
 
-    <!-- ============== PROJECTS — image-led grid ============== -->
-    <section v-if="projects?.length" class="border-y border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto max-w-[1320px] px-6 py-24">
+    <!-- ============== PROJECTS — full-bleed 视差胶片 ============== -->
+    <section v-if="projects?.length" class="border-y border-[var(--rule)] py-24">
+      <div class="mx-auto max-w-[1536px] px-6">
         <div class="section-head mb-12">
           <div>
             <p class="kicker kicker--cobalt mb-2">№ 02 — Working Ledger</p>
@@ -180,23 +180,24 @@ onMounted(() => {
           </div>
           <NuxtLink to="/projects" class="link-more shrink-0">{{ t('common.viewAll') }}</NuxtLink>
         </div>
-
-        <ClientOnly>
-          <TheReel :items="(projects ?? []).map(p => ({ path: p.path, title: p.title, description: p.description, status: p.status, src: useArticleImage(p.path, 'wide').src, alt: useArticleImage(p.path, 'wide').alt }))" />
-          <template #fallback>
-            <!-- SSG/无 JS 兜底：静态横向列表 -->
-            <div class="grid gap-8 md:grid-cols-2">
-              <NuxtLink v-for="p in projects" :key="p.path" :to="p.path" class="tile">
-                <h3 class="mag-4 mag-cjk">{{ p.title }}</h3>
-              </NuxtLink>
-            </div>
-          </template>
-        </ClientOnly>
       </div>
+
+      <!-- 胶片带满幅出血、左右贴边 -->
+      <ClientOnly>
+        <TheReel :items="(projects ?? []).map(p => ({ path: p.path, title: p.title, description: p.description, status: p.status, src: useArticleImage(p.path, 'wide').src, alt: useArticleImage(p.path, 'wide').alt }))" />
+        <template #fallback>
+          <!-- SSG/无 JS 兜底：静态横向列表 -->
+          <div class="mx-auto grid max-w-[1536px] gap-8 px-6 md:grid-cols-2">
+            <NuxtLink v-for="p in projects" :key="p.path" :to="p.path" class="tile">
+              <h3 class="mag-4 mag-cjk">{{ p.title }}</h3>
+            </NuxtLink>
+          </div>
+        </template>
+      </ClientOnly>
     </section>
 
     <!-- ============== BLOG ============== -->
-    <section v-if="latestBlog?.length" class="mx-auto max-w-[1320px] px-6 py-24">
+    <section v-if="latestBlog?.length" class="mx-auto max-w-[1536px] px-6 py-24">
       <div class="section-head mb-12">
         <div>
           <p class="kicker kicker--cobalt mb-2">№ 03 — Dispatches</p>
@@ -229,7 +230,7 @@ onMounted(() => {
 
     <!-- ============== NEWSLETTER ============== -->
     <section class="py-24">
-      <div class="mx-auto max-w-[1320px] px-6">
+      <div class="mx-auto max-w-[1536px] px-6">
         <div class="border border-[var(--rule)] bg-[var(--paper-2)] md:grid md:grid-cols-12 md:gap-x-12 p-10 md:p-16">
           <div class="md:col-span-6">
             <p class="kicker mb-4 text-[var(--cobalt)]">A letter, on occasion</p>

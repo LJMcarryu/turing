@@ -24,7 +24,7 @@ const filteredPosts = computed(() => {
 <template>
   <article>
     <header class="border-b border-[var(--ink)]">
-      <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-12">
+      <div class="mx-auto max-w-[1536px] px-6 pt-10 pb-12">
         <div class="mb-6 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
           <span class="meta text-[var(--cobalt)]">№ 03 — Dispatches</span>
           <span class="meta">{{ posts?.length ?? 0 }} entries</span>
@@ -36,7 +36,7 @@ const filteredPosts = computed(() => {
     </header>
 
     <div v-if="allTags.length" class="border-b border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto flex max-w-[1320px] flex-wrap items-baseline gap-x-5 gap-y-2 px-6 py-4">
+      <div class="mx-auto flex max-w-[1536px] flex-wrap items-baseline gap-x-5 gap-y-2 px-6 py-4">
         <span class="kicker mr-2">Filed under</span>
         <button
           class="text-sm font-medium transition-colors"
@@ -57,7 +57,7 @@ const filteredPosts = computed(() => {
       </div>
     </div>
 
-    <section class="mx-auto max-w-[1320px] px-6 py-16">
+    <section class="mx-auto max-w-[1536px] px-6 py-16">
       <!-- Featured + grid -->
       <div v-if="filteredPosts?.length" class="grid gap-x-8 gap-y-16 md:grid-cols-12">
         <!-- First: featured editorial layout -->

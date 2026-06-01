@@ -34,7 +34,7 @@ const filteredArticles = computed(() => {
 <template>
   <article>
     <header class="border-b border-[var(--ink)]">
-      <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-12">
+      <div class="mx-auto max-w-[1536px] px-6 pt-10 pb-12">
         <div class="mb-6 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
           <span class="meta text-[var(--cobalt)]">№ 01 — Field Manual</span>
           <span class="meta">{{ articles?.length ?? 0 }} tutorials</span>
@@ -46,7 +46,7 @@ const filteredArticles = computed(() => {
     </header>
 
     <!-- Departments as image-led tiles -->
-    <section class="mx-auto max-w-[1320px] px-6 py-16">
+    <section class="mx-auto max-w-[1536px] px-6 py-16">
       <div class="section-head mb-12">
         <div>
           <p class="kicker kicker--cobalt mb-2">Departments</p>
@@ -76,7 +76,7 @@ const filteredArticles = computed(() => {
 
     <!-- All tutorials, asymmetric magazine grid -->
     <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto max-w-[1320px] px-6 py-16">
+      <div class="mx-auto max-w-[1536px] px-6 py-16">
         <div class="section-head mb-12">
           <div>
             <p class="kicker kicker--cobalt mb-2">Index</p>

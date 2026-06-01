@@ -14,7 +14,7 @@ const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 <template>
   <article>
     <header class="border-b border-[var(--ink)]">
-      <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-12">
+      <div class="mx-auto max-w-[1536px] px-6 pt-10 pb-12">
         <div class="mb-6 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
           <span class="meta text-[var(--cobalt)]">№ 02 — Working Ledger</span>
           <span class="meta">{{ projects?.length ?? 0 }} entries</span>
@@ -25,7 +25,7 @@ const { projectStatusClass, projectStatusLabel } = useProjectStatus()
       </div>
     </header>
 
-    <section class="mx-auto max-w-[1320px] px-6 py-16">
+    <section class="mx-auto max-w-[1536px] px-6 py-16">
       <!-- Editorial alternating split layout, image-led -->
       <div v-if="projects?.length" class="flex flex-col gap-24">
         <NuxtLink

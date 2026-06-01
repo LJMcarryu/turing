@@ -1,4 +1,4 @@
-<!-- app/components/TheReel.client.vue -->
+<!-- app/components/TheReel.client.vue — 视差电影胶片带 -->
 <script setup lang="ts">
 interface ReelItem {
   path: string
@@ -9,119 +9,121 @@ interface ReelItem {
   alt: string
 }
 const props = defineProps<{ items: ReelItem[] }>()
-const mode = ref<'reel' | 'list'>('reel')
-const track = ref<HTMLElement | null>(null)
-const idx = ref(0)
-const progress = ref(0)
 
-function go(n: number) {
-  idx.value = Math.min(props.items.length - 1, Math.max(0, idx.value + n))
-  track.value?.children[idx.value]?.scrollIntoView({
-    behavior: 'smooth',
-    inline: 'center',
-    block: 'nearest',
-  })
+const root = ref<HTMLElement | null>(null)
+const trackA = ref<HTMLElement | null>(null)
+const trackB = ref<HTMLElement | null>(null)
+const listMode = ref(false)
+const enabled = ref(false)
+
+// 两排胶片，各重复一遍内容形成连续长条；B 排倒序，方向/速度都与 A 不同
+const rowA = computed(() => [...props.items, ...props.items])
+const rowB = computed(() => {
+  const r = [...props.items].reverse()
+  return [...r, ...r]
+})
+const pad = (n: number) => String(n).padStart(2, '0')
+
+let raf = 0
+let targetP = 0.5
+let curP = 0.5
+let sA = 0
+let sB = 0 // 各排横向余量(slack)
+
+function measure() {
+  const pa = trackA.value?.parentElement
+  const pb = trackB.value?.parentElement
+  if (trackA.value && pa) sA = Math.max(0, trackA.value.scrollWidth - pa.clientWidth)
+  if (trackB.value && pb) sB = Math.max(0, trackB.value.scrollWidth - pb.clientWidth)
 }
-function onKey(e: KeyboardEvent) {
-  if (mode.value !== 'reel') return
-  if (e.key === 'ArrowRight') {
-    e.preventDefault()
-    go(1)
-  }
-  if (e.key === 'ArrowLeft') {
-    e.preventDefault()
-    go(-1)
-  }
-}
-// 滚动同步：进度条 + 居中帧（时间码随手摇过片跳动）
 function onScroll() {
-  const el = track.value
-  if (!el) return
-  const max = el.scrollWidth - el.clientWidth
-  progress.value = max > 0 ? el.scrollLeft / max : 0
-  const center = el.scrollLeft + el.clientWidth / 2
-  let best = 0
-  let bestDist = Number.POSITIVE_INFINITY
-  Array.from(el.children).forEach((c, i) => {
-    const cell = c as HTMLElement
-    const cc = cell.offsetLeft + cell.offsetWidth / 2
-    const d = Math.abs(cc - center)
-    if (d < bestDist) {
-      bestDist = d
-      best = i
-    }
+  if (!root.value) return
+  const r = root.value.getBoundingClientRect()
+  // 0 = 区块刚从底部进入视口；1 = 刚从顶部离开。页面照常滚动，这只是读位置
+  targetP = (window.innerHeight - r.top) / (window.innerHeight + r.height)
+}
+function loop() {
+  curP += (targetP - curP) * 0.07 // 阻尼，胶片惯性感
+  if (trackA.value && sA > 0) {
+    const tx = -sA / 2 + (0.5 - curP) * sA * 0.6 // A 排：行程大、向左
+    trackA.value.style.transform = `translate3d(${tx}px, 0, 0)`
+  }
+  if (trackB.value && sB > 0) {
+    const tx = -sB / 2 - (0.5 - curP) * sB * 0.42 // B 排：反向、速度更慢 → 不同位置滚动不一样
+    trackB.value.style.transform = `translate3d(${tx}px, 0, 0)`
+  }
+  raf = requestAnimationFrame(loop)
+}
+
+onMounted(() => {
+  enabled.value
+    = window.matchMedia('(pointer: fine)').matches
+      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  if (!enabled.value) return // 移动/降级：原生横向滑动，无视差
+  nextTick(() => {
+    measure()
+    onScroll()
+    raf = requestAnimationFrame(loop)
   })
-  idx.value = best
-}
-// 竖向滚轮 → 横向滚动（Lenis 接管了页面 wheel，这里让卷宗带原生滚动）
-function onWheel(e: WheelEvent) {
-  const el = track.value
-  if (!el) return
-  if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return // 横向手势/触控板走原生
-  el.scrollLeft += e.deltaY
-  e.preventDefault()
-}
-const tc = computed(
-  () => `${String(idx.value + 1).padStart(2, '0')} / ${String(props.items.length).padStart(2, '0')}`,
-)
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', measure, { passive: true })
+  const t = setTimeout(measure, 600) // 图片/字体加载后再量一次
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(raf)
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', measure)
+    clearTimeout(t)
+  })
+})
+watch(listMode, () => nextTick(measure))
 </script>
 
 <template>
-  <div class="reel" tabindex="0" :aria-label="`项目放映 ${tc}`" @keydown="onKey">
-    <div class="reel-bar machine">
-      <span class="reel-rec">
-        <span class="reel-dot" aria-hidden="true" />REEL · {{ tc }}
-      </span>
-      <span class="reel-scrub" aria-hidden="true">
-        <span class="reel-scrub-fill" :style="{ transform: `scaleX(${0.04 + progress * 0.96})` }" />
-      </span>
-      <button
-        type="button"
-        class="reel-toggle"
-        data-magnet
-        @click="mode = mode === 'reel' ? 'list' : 'reel'"
-      >
-        {{ mode === 'reel' ? '列表视图' : '放映视图' }}
+  <div ref="root" class="film" :class="{ 'is-on': enabled && !listMode }">
+    <div class="film-head machine">
+      <span><span class="film-dot" aria-hidden="true" />FILM · {{ items.length }} REELS · 24FPS</span>
+      <button type="button" class="film-toggle" data-magnet @click="listMode = !listMode">
+        {{ listMode ? '胶片视图' : '列表视图' }}
       </button>
     </div>
 
-    <div
-      v-if="mode === 'reel'"
-      ref="track"
-      class="reel-track"
-      role="list"
-      data-lenis-prevent
-      @scroll.passive="onScroll"
-      @wheel="onWheel"
-    >
-      <NuxtLink
-        v-for="(it, i) in items"
-        :key="it.path"
-        :to="it.path"
-        class="reel-cell"
-        role="listitem"
-        data-magnet
-      >
-        <span class="reel-no machine" aria-hidden="true">№ {{ String(i + 1).padStart(2, '0') }}</span>
-        <div class="reel-frame">
-          <div class="ar-wide overflow-hidden duotone">
-            <img :src="it.src" :alt="it.alt" loading="lazy">
-          </div>
+    <template v-if="!listMode">
+      <div class="film-strip">
+        <div class="film-perf" aria-hidden="true" />
+        <div ref="trackA" class="film-track">
+          <NuxtLink v-for="(it, i) in rowA" :key="`a${i}`" :to="it.path" class="frame" data-magnet>
+            <div class="ar-wide overflow-hidden duotone">
+              <img :src="it.src" :alt="it.alt" loading="lazy">
+            </div>
+            <span class="frame-cap">
+              <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
+              <span class="mag-cjk">{{ it.title }}</span>
+            </span>
+          </NuxtLink>
         </div>
-        <h3 class="mag-4 mag-cjk mt-3">{{ it.title }}</h3>
-        <p v-if="it.description" class="tile__dek mt-1 line-clamp-2">{{ it.description }}</p>
-      </NuxtLink>
-    </div>
+        <div class="film-perf" aria-hidden="true" />
+      </div>
 
-    <div v-if="mode === 'reel'" class="reel-ruler machine" aria-hidden="true">
-      <span>FPS 24</span>
-      <span>滚轮 / ← →</span>
-      <span>TC {{ tc }}</span>
-    </div>
+      <div class="film-strip">
+        <div class="film-perf" aria-hidden="true" />
+        <div ref="trackB" class="film-track">
+          <NuxtLink v-for="(it, i) in rowB" :key="`b${i}`" :to="it.path" class="frame" data-magnet>
+            <div class="ar-wide overflow-hidden duotone">
+              <img :src="it.src" :alt="it.alt" loading="lazy">
+            </div>
+            <span class="frame-cap">
+              <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
+              <span class="mag-cjk">{{ it.title }}</span>
+            </span>
+          </NuxtLink>
+        </div>
+        <div class="film-perf" aria-hidden="true" />
+      </div>
+    </template>
 
     <div v-else class="reel-list" role="list">
       <NuxtLink v-for="(it, i) in items" :key="it.path" :to="it.path" class="entry" role="listitem">
-        <span class="entry__num">{{ String(i + 1).padStart(2, '0') }}</span>
+        <span class="entry__num">{{ pad(i + 1) }}</span>
         <div>
           <h3 class="entry__title">{{ it.title }}</h3>
           <p class="entry__dek">{{ it.description }}</p>
@@ -133,27 +135,26 @@ const tc = computed(
 </template>
 
 <style scoped>
-.reel:focus-visible {
-  outline: 2px solid var(--cobalt);
-  outline-offset: 6px;
+.film {
+  overflow: hidden;
 }
-.reel-bar {
+.film-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  max-width: 1536px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem 0.6rem;
   border-bottom: 1px solid var(--rule);
-  padding-bottom: 0.6rem;
   font-size: 0.72rem;
   color: var(--ink-soft);
 }
-.reel-rec {
+.film-head > span {
   display: inline-flex;
   align-items: center;
   gap: 0.55em;
-  white-space: nowrap;
 }
-.reel-dot {
+.film-dot {
   width: 7px;
   height: 7px;
   border-radius: 999px;
@@ -166,110 +167,93 @@ const tc = computed(
     opacity: 0.2;
   }
 }
-.reel-scrub {
-  flex: 1;
-  max-width: 320px;
-  height: 2px;
-  background: var(--rule);
-  position: relative;
-  overflow: hidden;
-}
-.reel-scrub-fill {
-  position: absolute;
-  inset: 0;
-  transform-origin: left;
-  background: var(--cobalt);
-  transform: scaleX(0.04);
-}
-.reel-toggle {
+.film-toggle {
   border: 1px solid var(--rule);
   padding: 0.3em 0.8em;
   border-radius: 999px;
   color: var(--ink);
   white-space: nowrap;
 }
-.reel-toggle:hover {
+.film-toggle:hover {
   border-color: var(--cobalt);
   color: var(--cobalt);
 }
-.reel-track {
+
+/* 胶片带：上下齿孔 + 中间帧轨 */
+.film-strip {
   display: flex;
-  gap: 1.5rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 1.5rem 0;
-  scrollbar-width: thin;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper-2);
+  margin-bottom: 1.5rem;
 }
-.reel-cell {
-  flex: 0 0 min(72vw, 460px);
-  scroll-snap-align: center;
+.film-perf {
+  height: 15px;
+  flex: none;
+  background-color: var(--paper-3);
+  background-image: radial-gradient(circle, oklch(0.44 0.012 60) 0 2.5px, transparent 3px);
+  background-size: 19px 15px;
+  background-repeat: repeat-x;
+  background-position: center;
+}
+.film-track {
+  display: flex;
+  will-change: transform;
+}
+.frame {
+  flex: 0 0 clamp(220px, 26vw, 360px);
   position: relative;
+  border-left: 1px solid oklch(0.3 0.012 60);
 }
-.reel-no {
-  position: absolute;
-  top: 1.1rem;
-  left: 1.1rem;
-  z-index: 2;
-  color: var(--amber);
-  font-size: 0.72rem;
-}
-/* 胶片帧：细框 + 对角琥珀套准角标 */
-.reel-frame {
-  position: relative;
-  border: 1px solid var(--rule);
-  padding: 6px;
-}
-.reel-frame::before,
-.reel-frame::after {
-  content: '';
-  position: absolute;
-  width: 11px;
-  height: 11px;
-  border: 1.5px solid var(--amber);
-  opacity: 0.6;
-}
-.reel-frame::before {
-  left: -1px;
-  top: -1px;
-  border-right: 0;
-  border-bottom: 0;
-}
-.reel-frame::after {
-  right: -1px;
-  bottom: -1px;
+.frame:first-child {
   border-left: 0;
-  border-top: 0;
 }
-/* 走带刻度尺 */
-.reel-ruler {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  margin-top: 0.4rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--rule);
-  font-size: 0.62rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
+.frame .ar-wide {
+  aspect-ratio: 16 / 10;
 }
-.reel-ruler::before {
-  content: '';
+.frame-cap {
   position: absolute;
   left: 0;
   right: 0;
-  top: 0;
-  height: 7px;
-  background-image: repeating-linear-gradient(90deg, var(--rule) 0 1px, transparent 1px 14px);
-  opacity: 0.5;
+  bottom: 0;
+  padding: 1.4rem 0.85rem 0.7rem;
+  font-family: var(--font-body);
+  font-size: 0.84rem;
+  line-height: 1.2;
+  color: var(--ink);
+  background: linear-gradient(to top, oklch(0.1 0.012 60 / 0.9), transparent);
+  display: flex;
+  gap: 0.5em;
+  align-items: baseline;
 }
+.frame-cap .machine {
+  color: var(--amber);
+  font-size: 0.7rem;
+  flex: none;
+}
+
+/* 非视差（移动/降级/列表）：原生横向滑动 */
+.film:not(.is-on) .film-track {
+  overflow-x: auto;
+  transform: none !important;
+  scrollbar-width: thin;
+}
+
 .reel-list {
   display: flex;
   flex-direction: column;
+  max-width: 1536px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .frame {
+    flex-basis: 70vw;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .reel-dot {
+  .film-dot {
     animation: none;
   }
 }

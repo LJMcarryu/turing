@@ -36,7 +36,7 @@ const filteredArticles = computed(() => {
   <article>
     <!-- Department cover w/ hero image -->
     <header class="border-b border-[var(--rule)]">
-      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-8 md:grid-cols-12 md:gap-x-10">
+      <div class="mx-auto grid max-w-[1536px] grid-cols-1 gap-0 px-6 pt-8 md:grid-cols-12 md:gap-x-10">
         <div class="md:col-span-6 md:pr-6">
           <nav class="meta mb-6 flex items-center gap-2">
             <NuxtLink to="/" class="hover:text-[var(--cobalt)]">Home</NuxtLink>
@@ -55,7 +55,7 @@ const filteredArticles = computed(() => {
       </div>
     </header>
 
-    <section class="mx-auto max-w-[1320px] px-6 py-16">
+    <section class="mx-auto max-w-[1536px] px-6 py-16">
       <div class="section-head mb-12">
         <div>
           <p class="kicker kicker--cobalt mb-2">Index</p>

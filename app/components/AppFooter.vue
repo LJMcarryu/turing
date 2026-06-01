@@ -6,7 +6,7 @@ const year = new Date().getFullYear()
 
 <template>
   <footer class="mt-24 bg-[var(--ink-dark)] text-[var(--paper-dark)]">
-    <div class="mx-auto max-w-[1320px] px-6 pt-16 pb-10">
+    <div class="mx-auto max-w-[1536px] px-6 pt-16 pb-10">
       <!-- Big wordmark + tag -->
       <div class="flex flex-wrap items-end justify-between gap-6 border-b border-[oklch(0.92_0.005_80/0.2)] pb-12">
         <p class="font-display text-6xl font-medium leading-none md:text-7xl">

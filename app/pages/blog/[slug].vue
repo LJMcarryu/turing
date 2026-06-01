@@ -97,7 +97,7 @@ const { data: relatedPosts } = await useAsyncData(`related-${route.path}`, async
 
     <!-- Related -->
     <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto max-w-[1320px] px-6 py-20">
+      <div class="mx-auto max-w-[1536px] px-6 py-20">
         <NuxtLink to="/blog" class="link-more mb-10 inline-flex">← {{ t('common.backTo') }} {{ t('blog.title') }}</NuxtLink>
 
         <div v-if="relatedPosts?.length" class="mt-10">

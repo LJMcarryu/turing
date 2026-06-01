@@ -15,25 +15,27 @@ test('reduced-motion disables arc animation', async ({ page }) => {
   }
 })
 
-test('projects reel keyboard escape hatch works', async ({ page }) => {
+test('projects film list-view escape hatch works', async ({ page }) => {
   await page.goto('/')
-  const reel = page.locator('.reel')
-  await reel.scrollIntoViewIfNeeded()
-  await reel.focus()
-  await page.keyboard.press('ArrowRight') // 不应抛错；卷宗推进
-  await expect(page.getByRole('button', { name: /列表视图|放映视图/ })).toBeVisible()
+  const toggle = page.getByRole('button', { name: '列表视图' })
+  await toggle.scrollIntoViewIfNeeded()
+  await expect(toggle).toBeVisible()
+  await toggle.click()
+  await expect(page.getByRole('button', { name: '胶片视图' })).toBeVisible()
 })
 
-test('projects reel scrolls horizontally on wheel (not hijacked by Lenis)', async ({ page }) => {
+test('film strip drifts horizontally while page keeps scrolling (parallax, not pinned)', async ({ page }) => {
   await page.goto('/')
-  const track = page.locator('.reel-track')
+  const track = page.locator('.film-track').first()
   await track.waitFor({ state: 'visible' })
-  await track.scrollIntoViewIfNeeded()
-  await page.waitForTimeout(500) // 等页面平滑滚动惯性稳定
-  const before = await track.evaluate((el: HTMLElement) => el.scrollLeft)
-  await track.hover()
-  await page.mouse.wheel(0, 600)
+  await page.locator('.film').scrollIntoViewIfNeeded()
   await page.waitForTimeout(500)
-  const after = await track.evaluate((el: HTMLElement) => el.scrollLeft)
-  expect(after).toBeGreaterThan(before + 20)
+  const y1 = await page.evaluate(() => window.scrollY)
+  const t1 = await track.evaluate((el: HTMLElement) => getComputedStyle(el).transform)
+  await page.mouse.wheel(0, 900)
+  await page.waitForTimeout(700)
+  const y2 = await page.evaluate(() => window.scrollY)
+  const t2 = await track.evaluate((el: HTMLElement) => getComputedStyle(el).transform)
+  expect(y2).toBeGreaterThan(y1) // 页面确实在滚动（没被 pin 住）
+  expect(t2).not.toBe(t1) // 胶片横向漂移了
 })

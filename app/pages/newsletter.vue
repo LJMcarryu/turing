@@ -19,7 +19,7 @@ const heroImg = useArticleImage('newsletter-hero', 'hero')
         </div>
       </div>
       <div class="bleed-hero__overlay">
-        <div class="mx-auto max-w-[1320px]">
+        <div class="mx-auto max-w-[1536px]">
           <p class="kicker mb-3 !text-[var(--paper-dark)]/80">Dispatch · A letter, on occasion</p>
           <h1 class="mag-1 !text-[var(--paper-dark)] max-w-[14ch]">
             {{ t('newsletter.title') }} <span class="mag-italic">{{ t('newsletter.titleHighlight') }}</span>
@@ -34,7 +34,7 @@ const heroImg = useArticleImage('newsletter-hero', 'hero')
     </section>
 
     <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto max-w-[1320px] px-6 py-20">
+      <div class="mx-auto max-w-[1536px] px-6 py-20">
         <div class="section-head mb-12">
           <div>
             <p class="kicker kicker--cobalt mb-2">Synopsis</p>

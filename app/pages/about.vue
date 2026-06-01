@@ -10,7 +10,7 @@ const portrait = useArticleImage('about-jimmy-portrait', 'portrait')
 <template>
   <article>
     <section class="border-b border-[var(--rule)]">
-      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-8 md:grid-cols-12 md:gap-x-10">
+      <div class="mx-auto grid max-w-[1536px] grid-cols-1 gap-0 px-6 pt-8 md:grid-cols-12 md:gap-x-10">
         <div class="md:col-span-7 md:pr-6">
           <div class="mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
             <span class="meta text-[var(--cobalt)]">№ 04 · About</span>
@@ -33,7 +33,7 @@ const portrait = useArticleImage('about-jimmy-portrait', 'portrait')
       </div>
     </section>
 
-    <section class="mx-auto max-w-[1320px] px-6 py-20">
+    <section class="mx-auto max-w-[1536px] px-6 py-20">
       <div class="grid gap-12 md:grid-cols-12">
         <div class="md:col-span-8">
           <p class="kicker mb-5">{{ t('about.findHere') }}</p>

@@ -97,7 +97,7 @@ const { data: relatedArticles } = await useAsyncData(`related-${route.path}`, as
     </section>
 
     <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
-      <div class="mx-auto max-w-[1320px] px-6 py-20">
+      <div class="mx-auto max-w-[1536px] px-6 py-20">
         <NuxtLink :to="`/learn/${article.category}`" class="link-more mb-10 inline-flex">← {{ t('common.backTo') }} {{ categoryName }}</NuxtLink>
 
         <div v-if="relatedArticles?.length" class="mt-10">
