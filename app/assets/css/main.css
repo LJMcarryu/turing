@@ -59,6 +59,105 @@
   --color-brand-subtle:  var(--ink-faint);
 }
 
+/* =============================================================
+   NOIR — 暗黑电影感主题（作用域化，仅 [data-theme="noir"] 生效）
+   ============================================================= */
+[data-theme='noir'] {
+  /* 画布 / 表面 — 暖近黑 60° */
+  --paper: oklch(0.145 0.014 60);
+  --paper-2: oklch(0.185 0.013 60);
+  --paper-3: oklch(0.225 0.012 62);
+  /* 文字 — 反白象牙调 */
+  --ink: oklch(0.93 0.012 75); /* 主文/标题 ≈14:1 */
+  --ink-soft: oklch(0.74 0.012 72); /* 次文 ≈7:1 */
+  --ink-faint: oklch(0.6 0.011 70); /* meta ≥4.5:1，仅 ≥0.8rem */
+  /* 分隔线 */
+  --rule: oklch(0.3 0.012 62);
+  --rule-soft: oklch(0.24 0.012 62);
+  /* 强调色 — 暗场提亮才发光 */
+  --cobalt: oklch(0.62 0.17 258);
+  --cobalt-deep: oklch(0.52 0.16 258);
+  --cobalt-bright: oklch(0.7 0.18 258);
+  --cobalt-soft: oklch(0.3 0.06 258);
+  --amber: oklch(0.8 0.135 72);
+  --amber-deep: oklch(0.66 0.13 72);
+  /* 反白板块用 */
+  --ink-dark: oklch(0.985 0.003 80); /* Newsletter 亮卡底 */
+  --paper-dark: oklch(0.16 0.011 255); /* 亮卡上的文字 */
+  color-scheme: dark;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* 缓动语言（禁 ease/linear） */
+:root {
+  --ease-develop: cubic-bezier(0.22, 0.61, 0.16, 1);
+  --ease-cut: cubic-bezier(0.85, 0, 0.15, 1);
+  --ease-scrub: cubic-bezier(0.33, 0, 0.07, 1);
+  --ease-reel: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* duotone 救图 — 纯静态 CSS，无动画 */
+[data-theme='noir'] .duotone {
+  filter: grayscale(1) sepia(0.45) brightness(0.82) contrast(1.08);
+  background: var(--amber-deep);
+}
+[data-theme='noir'] .duotone img {
+  mix-blend-mode: luminosity;
+  opacity: 0.92;
+}
+
+/* keyframes */
+@keyframes develop-spot {
+  from {
+    --spot-r: 0%;
+  }
+  to {
+    --spot-r: 130%;
+  }
+}
+@keyframes period-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--cobalt));
+  }
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 14px var(--cobalt-bright));
+  }
+}
+@keyframes line-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 广色域护栏 */
+@media (color-gamut: srgb) {
+  [data-theme='noir'] {
+    --paper: #131210;
+    --ink: #ece7df;
+    --cobalt: #5a6ff0;
+    --amber: #e3b15a;
+  }
+}
+
+/* reduced-motion 全链路退化 */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme='noir'] [class*='reveal'],
+  [data-theme='noir'] .arc {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 html { color-scheme: light; }
 
 body {
