@@ -215,17 +215,17 @@ onMounted(() => {
     </section>
 
     <!-- ============== NEWSLETTER ============== -->
-    <section class="bg-[var(--ink-dark)] text-[var(--paper-dark)]">
-      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-10 px-6 py-24 md:grid-cols-12 md:gap-x-12">
-        <div class="md:col-span-6">
-          <p class="kicker mb-4 !text-[var(--cobalt-bright)]">A letter, on occasion</p>
-          <h2 class="mag-1 !text-[var(--paper-dark)]">
-            {{ t('home.newsletter.title') }} <span class="mag-italic text-[var(--cobalt-bright)]">{{ t('home.newsletter.titleHighlight') }}</span>
-          </h2>
-        </div>
-        <div class="md:col-span-6 md:pl-8 md:border-l md:border-[oklch(0.92_0.005_80/0.2)]">
-          <p class="dek !text-[var(--paper-dark)] mb-8">{{ t('home.newsletter.description') }}</p>
-          <NewsletterForm />
+    <section class="py-24">
+      <div class="mx-auto max-w-[1320px] px-6">
+        <div class="news-card md:grid md:grid-cols-12 md:gap-x-12 p-10 md:p-16">
+          <div class="md:col-span-6">
+            <p class="kicker mb-4 text-[var(--cobalt)]">A letter, on occasion</p>
+            <h2 class="mag-1 mag-cjk">{{ t('home.newsletter.title') }} <span class="mag-italic text-[var(--cobalt)]">{{ t('home.newsletter.titleHighlight') }}</span></h2>
+          </div>
+          <div class="md:col-span-6 md:pl-8 md:border-l md:border-[var(--rule)]">
+            <p class="dek mb-8">{{ t('home.newsletter.description') }}</p>
+            <NewsletterForm />
+          </div>
         </div>
       </div>
     </section>
@@ -299,22 +299,20 @@ onMounted(() => {
   z-index: 1;
 }
 
-/* Form invert inside dark newsletter */
-section.bg-\[var\(--ink-dark\)\] :deep(.field) {
-  color: var(--paper-dark);
-  border-bottom-color: var(--paper-dark);
+/* Newsletter 明度反转亮卡 */
+.news-card {
+  --paper: oklch(0.985 0.003 80);
+  --ink: oklch(0.16 0.011 255);
+  --ink-soft: oklch(0.4 0.012 255);
+  --rule: oklch(0.88 0.006 80);
+  --cobalt: oklch(0.45 0.18 258);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 0 40px 80px -40px oklch(0 0 0 / 0.6);
+  border-radius: 2px;
 }
-section.bg-\[var\(--ink-dark\)\] :deep(.field::placeholder) { color: oklch(0.92 0.005 80 / 0.5); }
-section.bg-\[var\(--ink-dark\)\] :deep(.field:focus) { border-bottom-color: var(--cobalt-bright); }
-section.bg-\[var\(--ink-dark\)\] :deep(.kicker) { color: var(--paper-dark); opacity: 0.7; }
-section.bg-\[var\(--ink-dark\)\] :deep(.btn-ink) {
-  background: var(--paper-dark);
-  color: var(--ink-dark);
-  border-color: var(--paper-dark);
-}
-section.bg-\[var\(--ink-dark\)\] :deep(.btn-ink:hover) {
-  background: var(--cobalt-bright);
+.news-card ::selection {
+  background: var(--cobalt);
   color: var(--paper);
-  border-color: var(--cobalt-bright);
 }
 </style>
