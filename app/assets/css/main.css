@@ -652,6 +652,21 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .ed-fade { animation: ed-fade 520ms cubic-bezier(0.16, 1, 0.3, 1) both; }
 
+/* 滚动揭示 — useScrollReveal 加 .is-in 后触发 line-reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.reveal.is-in {
+  animation: line-reveal 600ms var(--ease-reel) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ed-fade { animation: none; }
   .figure--zoom:hover img { transform: none; }
