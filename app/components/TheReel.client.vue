@@ -1,4 +1,4 @@
-<!-- app/components/TheReel.client.vue — 视差电影胶片带 -->
+<!-- app/components/TheReel.client.vue — 单排视差电影胶片带 -->
 <script setup lang="ts">
 interface ReelItem {
   path: string
@@ -8,33 +8,23 @@ interface ReelItem {
   src: string
   alt: string
 }
-const props = defineProps<{ items: ReelItem[] }>()
+defineProps<{ items: ReelItem[] }>()
 
 const root = ref<HTMLElement | null>(null)
 const trackA = ref<HTMLElement | null>(null)
-const trackB = ref<HTMLElement | null>(null)
 const listMode = ref(false)
 const enabled = ref(false)
-
-// 两排胶片，各重复一遍内容形成连续长条；B 排倒序，方向/速度都与 A 不同
-const rowA = computed(() => [...props.items, ...props.items])
-const rowB = computed(() => {
-  const r = [...props.items].reverse()
-  return [...r, ...r]
-})
 const pad = (n: number) => String(n).padStart(2, '0')
 
 let raf = 0
 let targetP = 0.5
 let curP = 0.5
-let sA = 0
-let sB = 0 // 各排横向余量(slack)
+let sA = 0 // 横向余量(slack)
 
 function measure() {
   const pa = trackA.value?.parentElement
-  const pb = trackB.value?.parentElement
-  if (trackA.value && pa) sA = Math.max(0, trackA.value.scrollWidth - pa.clientWidth)
-  if (trackB.value && pb) sB = Math.max(0, trackB.value.scrollWidth - pb.clientWidth)
+  if (trackA.value && pa)
+    sA = Math.max(0, trackA.value.scrollWidth - pa.clientWidth)
 }
 function onScroll() {
   if (!root.value) return
@@ -45,12 +35,8 @@ function onScroll() {
 function loop() {
   curP += (targetP - curP) * 0.07 // 阻尼，胶片惯性感
   if (trackA.value && sA > 0) {
-    const tx = -sA / 2 + (0.5 - curP) * sA * 0.6 // A 排：行程大、向左
+    const tx = -sA / 2 + (0.5 - curP) * sA * 0.6 // 随页面滚动横向漂移
     trackA.value.style.transform = `translate3d(${tx}px, 0, 0)`
-  }
-  if (trackB.value && sB > 0) {
-    const tx = -sB / 2 - (0.5 - curP) * sB * 0.42 // B 排：反向、速度更慢 → 不同位置滚动不一样
-    trackB.value.style.transform = `translate3d(${tx}px, 0, 0)`
   }
   raf = requestAnimationFrame(loop)
 }
@@ -87,39 +73,21 @@ watch(listMode, () => nextTick(measure))
       </button>
     </div>
 
-    <template v-if="!listMode">
-      <div class="film-strip">
-        <div class="film-perf" aria-hidden="true" />
-        <div ref="trackA" class="film-track">
-          <NuxtLink v-for="(it, i) in rowA" :key="`a${i}`" :to="it.path" class="frame" data-magnet>
-            <div class="ar-wide overflow-hidden duotone">
-              <img :src="it.src" :alt="it.alt" loading="eager">
-            </div>
-            <span class="frame-cap">
-              <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
-              <span class="mag-cjk">{{ it.title }}</span>
-            </span>
-          </NuxtLink>
-        </div>
-        <div class="film-perf" aria-hidden="true" />
+    <div v-if="!listMode" class="film-strip">
+      <div class="film-perf" aria-hidden="true" />
+      <div ref="trackA" class="film-track">
+        <NuxtLink v-for="(it, i) in items" :key="it.path" :to="it.path" class="frame" data-magnet>
+          <div class="ar-wide overflow-hidden duotone">
+            <img :src="it.src" :alt="it.alt" loading="eager">
+          </div>
+          <span class="frame-cap">
+            <span class="machine">№ {{ pad(i + 1) }}</span>
+            <span class="mag-cjk">{{ it.title }}</span>
+          </span>
+        </NuxtLink>
       </div>
-
-      <div class="film-strip">
-        <div class="film-perf" aria-hidden="true" />
-        <div ref="trackB" class="film-track">
-          <NuxtLink v-for="(it, i) in rowB" :key="`b${i}`" :to="it.path" class="frame" data-magnet>
-            <div class="ar-wide overflow-hidden duotone">
-              <img :src="it.src" :alt="it.alt" loading="eager">
-            </div>
-            <span class="frame-cap">
-              <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
-              <span class="mag-cjk">{{ it.title }}</span>
-            </span>
-          </NuxtLink>
-        </div>
-        <div class="film-perf" aria-hidden="true" />
-      </div>
-    </template>
+      <div class="film-perf" aria-hidden="true" />
+    </div>
 
     <div v-else class="reel-list" role="list">
       <NuxtLink v-for="(it, i) in items" :key="it.path" :to="it.path" class="entry" role="listitem">
@@ -185,14 +153,13 @@ watch(listMode, () => nextTick(measure))
   flex-direction: column;
   overflow: hidden;
   background: var(--paper-2);
-  margin-bottom: 1.5rem;
 }
 .film-perf {
-  height: 15px;
+  height: 18px;
   flex: none;
   background-color: var(--paper-3);
-  background-image: radial-gradient(circle, oklch(0.44 0.012 60) 0 2.5px, transparent 3px);
-  background-size: 19px 15px;
+  background-image: radial-gradient(circle, oklch(0.44 0.012 60) 0 3px, transparent 3.5px);
+  background-size: 24px 18px;
   background-repeat: repeat-x;
   background-position: center;
 }
@@ -201,7 +168,7 @@ watch(listMode, () => nextTick(measure))
   will-change: transform;
 }
 .frame {
-  flex: 0 0 clamp(220px, 26vw, 360px);
+  flex: 0 0 clamp(300px, 42vw, 620px);
   position: relative;
   border-left: 1px solid oklch(0.3 0.012 60);
 }
@@ -216,19 +183,19 @@ watch(listMode, () => nextTick(measure))
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 1.4rem 0.85rem 0.7rem;
+  padding: 2rem 1.1rem 0.9rem;
   font-family: var(--font-body);
-  font-size: 0.84rem;
+  font-size: 1rem;
   line-height: 1.2;
   color: var(--ink);
-  background: linear-gradient(to top, oklch(0.1 0.012 60 / 0.9), transparent);
+  background: linear-gradient(to top, oklch(0.1 0.012 60 / 0.92), transparent);
   display: flex;
-  gap: 0.5em;
+  gap: 0.55em;
   align-items: baseline;
 }
 .frame-cap .machine {
   color: var(--amber);
-  font-size: 0.7rem;
+  font-size: 0.78rem;
   flex: none;
 }
 
@@ -249,7 +216,7 @@ watch(listMode, () => nextTick(measure))
 
 @media (max-width: 768px) {
   .frame {
-    flex-basis: 70vw;
+    flex-basis: 82vw;
   }
 }
 @media (prefers-reduced-motion: reduce) {
