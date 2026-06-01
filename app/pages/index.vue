@@ -98,7 +98,8 @@ onMounted(() => {
     </section>
 
     <!-- ============== LEARN ============== -->
-    <section v-if="featuredLearn?.length" class="mx-auto max-w-[1320px] px-6 py-24">
+    <section v-if="featuredLearn?.length" class="relative overflow-clip mx-auto max-w-[1320px] px-6 py-24">
+      <span aria-hidden="true" class="ghost-num">01</span>
       <div class="section-head mb-12">
         <div>
           <p class="kicker kicker--cobalt mb-2">№ 01 — Field Manual</p>
@@ -116,7 +117,7 @@ onMounted(() => {
           class="tile group md:col-span-7"
         >
           <figure class="figure figure--zoom">
-            <div class="ar-wide overflow-hidden">
+            <div class="ar-wide overflow-hidden duotone">
               <img :src="useArticleImage(featuredLearn[0].path, 'wide').src" :alt="useArticleImage(featuredLearn[0].path, 'wide').alt" loading="lazy">
             </div>
           </figure>
@@ -137,7 +138,7 @@ onMounted(() => {
             v-for="article in featuredLearn.slice(1, 4)"
             :key="article.path"
             :to="article.path"
-            class="group grid grid-cols-[1fr_140px] items-start gap-5 border-t border-[var(--rule)] pt-6"
+            class="reveal group grid grid-cols-[1fr_140px] items-start gap-5 border-t border-[var(--rule)] pt-6"
           >
             <div>
               <div class="mb-2 flex flex-wrap items-baseline gap-3">
@@ -147,7 +148,7 @@ onMounted(() => {
               <h4 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ article.title }}</h4>
               <p v-if="article.readingTime" class="meta mt-3">{{ article.readingTime }} {{ t('common.min') }}</p>
             </div>
-            <div class="ar-thumb overflow-hidden">
+            <div class="ar-thumb overflow-hidden duotone">
               <img :src="useArticleImage(article.path, 'thumb').src" :alt="useArticleImage(article.path, 'thumb').alt" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
             </div>
           </NuxtLink>
@@ -304,6 +305,28 @@ onMounted(() => {
     animation: none;
     top: 4.5rem;
   }
+}
+
+/* Learn 巨大琥珀幽灵编号 */
+.ghost-num {
+  position: absolute;
+  right: 2%;
+  top: -2.5rem;
+  z-index: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(8rem, 22vw, 20rem);
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--amber);
+  opacity: 0.14;
+  font-feature-settings: 'onum';
+  pointer-events: none;
+  line-height: 1;
+}
+.section-head,
+.grid {
+  position: relative;
+  z-index: 1;
 }
 
 /* Form invert inside dark newsletter */
