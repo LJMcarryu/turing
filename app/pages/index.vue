@@ -1,6 +1,13 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const { formatDate } = useFormatDate()
+
+// Cover 巨字拆分：中文逐字、英文逐词（保留词尾空格），用于载入逐字揭示
+const WORD_RE = /\S+\s*/g
+const titleUnits = computed(() => {
+  const s = t('home.hero.title')
+  return locale.value.startsWith('zh') ? [...s] : (s.match(WORD_RE) ?? [s])
+})
 
 useSeoMeta({
   title: `Turing — ${t('site.slogan')}`,
@@ -69,30 +76,30 @@ onMounted(() => {
     <section class="border-b border-[var(--rule)]">
       <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-6 pb-0 md:grid-cols-12 md:gap-x-10 md:pt-10">
         <!-- Text column -->
-        <div class="reveal md:col-span-7 md:pr-6">
-          <div class="mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
+        <div class="md:col-span-7 md:pr-6">
+          <div class="c-in mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3" style="--i: 0">
             <span class="machine meta">{{ dateline }}</span>
             <span class="machine meta text-[var(--cobalt)]">№ 04 · Cover Story</span>
           </div>
-          <p class="kicker kicker--cobalt mb-5">{{ t('home.hero.eyebrow') }}</p>
+          <p class="c-in kicker kicker--cobalt mb-5" style="--i: 1">{{ t('home.hero.eyebrow') }}</p>
           <h1 class="mag-1 mag-cjk headline">
-            {{ t('home.hero.title') }}<span ref="periodEl" class="period text-[var(--cobalt)]">.</span>
+            <span v-for="(u, i) in titleUnits" :key="i" class="hw" :style="{ '--i': i }">{{ u }}</span><span ref="periodEl" class="period text-[var(--cobalt)]">.</span>
           </h1>
           <div class="arc" aria-hidden="true" />
-          <p class="dek dek--cjk mt-8">{{ t('home.hero.subtitle') }}</p>
-          <div class="mt-10 flex flex-wrap items-center gap-4">
+          <p class="c-in dek dek--cjk mt-8" style="--i: 9">{{ t('home.hero.subtitle') }}</p>
+          <div class="c-in mt-10 flex flex-wrap items-center gap-4" style="--i: 11">
             <NuxtLink to="/learn" class="btn-ink" data-magnet>{{ t('home.hero.startLearning') }} <span aria-hidden="true">→</span></NuxtLink>
             <NuxtLink to="/projects" class="link-ed text-base">{{ t('home.hero.exploreProjects') }} →</NuxtLink>
           </div>
           <!-- dispatch 微条：坐实「内容站有货」 -->
-          <p v-if="latestBlog?.[0]" class="machine mt-8 text-[0.72rem] text-[var(--ink-faint)]">
+          <p v-if="latestBlog?.[0]" class="c-in machine mt-8 text-[0.72rem] text-[var(--ink-faint)]" style="--i: 13">
             NOW READING · <NuxtLink :to="latestBlog[0].path" class="text-[var(--cobalt)]">{{ latestBlog[0].title }}</NuxtLink>
           </p>
         </div>
 
         <!-- Image column -->
         <figure class="figure mt-10 md:col-span-5 md:mt-0">
-          <div class="ar-portrait overflow-hidden duotone reveal">
+          <div class="ar-portrait overflow-hidden duotone hero-develop">
             <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
           </div>
           <figcaption class="figure__caption">
@@ -123,7 +130,7 @@ onMounted(() => {
           class="tile group md:col-span-7"
         >
           <figure class="figure figure--zoom">
-            <div class="ar-wide overflow-hidden duotone">
+            <div class="ar-wide overflow-hidden duotone develop">
               <img :src="useArticleImage(featuredLearn[0].path, 'wide').src" :alt="useArticleImage(featuredLearn[0].path, 'wide').alt" loading="lazy">
             </div>
           </figure>
@@ -154,7 +161,7 @@ onMounted(() => {
               <h4 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ article.title }}</h4>
               <p v-if="article.readingTime" class="meta mt-3">{{ article.readingTime }} {{ t('common.min') }}</p>
             </div>
-            <div class="ar-thumb overflow-hidden duotone">
+            <div class="ar-thumb overflow-hidden duotone develop">
               <img :src="useArticleImage(article.path, 'thumb').src" :alt="useArticleImage(article.path, 'thumb').alt" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
             </div>
           </NuxtLink>
@@ -207,7 +214,7 @@ onMounted(() => {
           class="tile group reveal"
         >
           <figure class="figure figure--zoom">
-            <div class="ar-card overflow-hidden duotone">
+            <div class="ar-card overflow-hidden duotone develop">
               <img :src="useArticleImage(post.path, 'card').src" :alt="useArticleImage(post.path, 'card').alt" loading="lazy">
             </div>
           </figure>

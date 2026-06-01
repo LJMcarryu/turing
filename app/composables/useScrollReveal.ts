@@ -6,7 +6,7 @@ export function useScrollReveal() {
     return
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   onMounted(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'))
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal, .develop'))
     if (reduce) {
       els.forEach(el => el.classList.add('is-in'))
       return
