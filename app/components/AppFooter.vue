@@ -53,7 +53,7 @@ const year = new Date().getFullYear()
       <div class="mt-16 flex flex-col items-baseline justify-between gap-2 border-t border-[oklch(0.92_0.005_80/0.2)] pt-6 sm:flex-row">
         <p class="meta !text-[var(--paper-dark)]/60">© {{ year }} {{ appConfig.site.author }} · {{ t('common.allRightsReserved') }}</p>
         <p class="meta !text-[var(--paper-dark)]/60">
-          Bodoni Moda · Albert Sans · Imagery from <a href="https://picsum.photos" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--cobalt-bright)]">picsum.photos</a>
+          Bodoni Moda · Albert Sans · Imagery from <a href="https://unsplash.com/?utm_source=turing&utm_medium=referral" target="_blank" rel="noopener noreferrer" class="hover:text-[var(--cobalt-bright)]">Unsplash</a>
         </p>
       </div>
     </div>

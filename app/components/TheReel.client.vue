@@ -93,7 +93,7 @@ watch(listMode, () => nextTick(measure))
         <div ref="trackA" class="film-track">
           <NuxtLink v-for="(it, i) in rowA" :key="`a${i}`" :to="it.path" class="frame" data-magnet>
             <div class="ar-wide overflow-hidden duotone">
-              <img :src="it.src" :alt="it.alt" loading="lazy">
+              <img :src="it.src" :alt="it.alt" loading="eager">
             </div>
             <span class="frame-cap">
               <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
@@ -109,7 +109,7 @@ watch(listMode, () => nextTick(measure))
         <div ref="trackB" class="film-track">
           <NuxtLink v-for="(it, i) in rowB" :key="`b${i}`" :to="it.path" class="frame" data-magnet>
             <div class="ar-wide overflow-hidden duotone">
-              <img :src="it.src" :alt="it.alt" loading="lazy">
+              <img :src="it.src" :alt="it.alt" loading="eager">
             </div>
             <span class="frame-cap">
               <span class="machine">№ {{ pad((i % items.length) + 1) }}</span>
