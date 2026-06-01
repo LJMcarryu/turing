@@ -168,47 +168,17 @@ onMounted(() => {
           <NuxtLink to="/projects" class="link-more shrink-0">{{ t('common.viewAll') }}</NuxtLink>
         </div>
 
-        <!-- Asymmetric 4-up: one tall portrait + 3 cards -->
-        <div class="grid gap-x-8 gap-y-12 md:grid-cols-12">
-          <NuxtLink
-            v-if="projects[0]"
-            :to="projects[0].path"
-            class="tile group md:col-span-5 md:row-span-2"
-          >
-            <figure class="figure figure--zoom">
-              <div class="ar-portrait overflow-hidden">
-                <img :src="useArticleImage(projects[0].path, 'portrait').src" :alt="useArticleImage(projects[0].path, 'portrait').alt" loading="lazy">
-              </div>
-            </figure>
-            <div>
-              <div class="mb-2"><span class="pill pill--active">Featured</span></div>
-              <h3 class="mag-3 transition-colors group-hover:text-[var(--cobalt)]">{{ projects[0].title }}</h3>
-              <p class="tile__dek mt-3">{{ projects[0].description }}</p>
-              <div v-if="projects[0].tags?.length" class="mt-3 flex flex-wrap gap-x-3">
-                <span v-for="tag in projects[0].tags.slice(0, 4)" :key="tag" class="tag">{{ tag }}</span>
-              </div>
+        <ClientOnly>
+          <TheReel :items="(projects ?? []).map(p => ({ path: p.path, title: p.title, description: p.description, status: p.status, src: useArticleImage(p.path, 'wide').src, alt: useArticleImage(p.path, 'wide').alt }))" />
+          <template #fallback>
+            <!-- SSG/无 JS 兜底：静态横向列表 -->
+            <div class="grid gap-8 md:grid-cols-2">
+              <NuxtLink v-for="p in projects" :key="p.path" :to="p.path" class="tile">
+                <h3 class="mag-4 mag-cjk">{{ p.title }}</h3>
+              </NuxtLink>
             </div>
-          </NuxtLink>
-
-          <NuxtLink
-            v-for="(project, i) in projects.slice(1, 4)"
-            :key="project.path"
-            :to="project.path"
-            class="tile group md:col-span-7"
-            :class="i % 2 === 0 ? 'md:grid md:grid-cols-[200px_1fr] md:gap-6 md:flex-row' : 'md:grid md:grid-cols-[1fr_200px] md:gap-6'"
-          >
-            <figure class="figure figure--zoom" :class="i % 2 === 0 ? 'md:order-1' : 'md:order-2'">
-              <div class="ar-square overflow-hidden">
-                <img :src="useArticleImage(project.path, 'square').src" :alt="useArticleImage(project.path, 'square').alt" loading="lazy">
-              </div>
-            </figure>
-            <div :class="i % 2 === 0 ? 'md:order-2' : 'md:order-1'">
-              <span class="meta mb-2 inline-block">{{ t(`projects.status.${project.status}`) }}</span>
-              <h3 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ project.title }}</h3>
-              <p class="tile__dek mt-2 line-clamp-2">{{ project.description }}</p>
-            </div>
-          </NuxtLink>
-        </div>
+          </template>
+        </ClientOnly>
       </div>
     </section>
 
