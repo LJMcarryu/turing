@@ -1,16 +1,11 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 const mobileMenuOpen = ref(false)
-const { locale, locales, setLocale, t } = useI18n()
+const { t } = useI18n()
 const route = useRoute()
 watch(() => route.path, () => {
   mobileMenuOpen.value = false
 })
-
-const availableLocales = computed(() =>
-  locales.value.filter(i => i.code !== locale.value),
-)
-const switchLocale = (code: string) => setLocale(code as typeof locale.value)
 
 const nav = computed(() => [
   { to: '/learn', label: t('nav.learn') },
@@ -32,8 +27,7 @@ const issue = computed(() => {
     <div class="border-b border-[var(--rule)]">
       <div class="mx-auto flex max-w-[1536px] items-center justify-between gap-3 px-6 py-2">
         <span class="meta">{{ t('site.slogan') }}</span>
-        <span class="meta hidden sm:inline">{{ issue }}</span>
-        <span class="meta">CN · EN</span>
+        <span class="meta">{{ issue }}</span>
       </div>
     </div>
 
@@ -56,16 +50,6 @@ const issue = computed(() => {
           </NuxtLink>
 
           <span class="h-4 w-px bg-[var(--rule)]"></span>
-
-          <button
-            v-for="loc in availableLocales"
-            :key="loc.code"
-            class="text-xs font-semibold uppercase tracking-widest text-[var(--ink-soft)] hover:text-[var(--cobalt)]"
-            :title="`Switch to ${loc.name}`"
-            @click="switchLocale(loc.code)"
-          >
-            {{ loc.code === 'zh-CN' ? '中文' : 'EN' }}
-          </button>
 
           <NuxtLink to="/newsletter" class="btn-ink text-sm">
             {{ t('nav.subscribe') }}
@@ -102,17 +86,6 @@ const issue = computed(() => {
           >
             {{ item.label }}
           </NuxtLink>
-
-          <div class="flex gap-4 py-4">
-            <button
-              v-for="loc in availableLocales"
-              :key="loc.code"
-              class="text-xs font-semibold uppercase tracking-widest"
-              @click="switchLocale(loc.code)"
-            >
-              {{ loc.name }}
-            </button>
-          </div>
 
           <NuxtLink to="/newsletter" class="btn-ink mt-2 self-start" @click="mobileMenuOpen = false">
             {{ t('nav.subscribe') }}
