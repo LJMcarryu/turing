@@ -198,16 +198,16 @@ onMounted(() => {
           v-for="post in latestBlog.slice(0, 3)"
           :key="post.path"
           :to="post.path"
-          class="tile group"
+          class="tile group reveal"
         >
           <figure class="figure figure--zoom">
-            <div class="ar-card overflow-hidden">
+            <div class="ar-card overflow-hidden duotone">
               <img :src="useArticleImage(post.path, 'card').src" :alt="useArticleImage(post.path, 'card').alt" loading="lazy">
             </div>
           </figure>
           <div>
             <span class="meta">{{ formatDate(post.date) }}</span>
-            <h3 class="mag-4 mt-2 transition-colors group-hover:text-[var(--cobalt)]">{{ post.title }}</h3>
+            <h3 class="mag-4 mag-cjk mt-2 transition-colors group-hover:text-[var(--cobalt)]">{{ post.title }}</h3>
             <p class="tile__dek mt-2 line-clamp-2">{{ post.description }}</p>
           </div>
         </NuxtLink>
