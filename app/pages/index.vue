@@ -24,42 +24,69 @@ const today = new Date()
 const dateline = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
 
 const heroImg = useArticleImage('turing-cover', 'hero')
+
+useScrollReveal()
+
+const periodEl = ref<HTMLElement | null>(null)
+onMounted(() => {
+  if (import.meta.server) return
+  if (
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+    !window.matchMedia('(pointer: fine)').matches
+  )
+    return
+  const arc = document.querySelector<HTMLElement>('.arc')
+  if (!arc) return
+  let y = 0.5
+  let cur = 0.5
+  let raf = 0
+  const onMove = (e: MouseEvent) => {
+    y = Math.min(1, Math.max(0, e.clientY / window.innerHeight))
+  }
+  const loop = () => {
+    cur += (y - cur) * 0.08
+    arc.style.setProperty('--arc-y', String(cur))
+    raf = requestAnimationFrame(loop)
+  }
+  window.addEventListener('mousemove', onMove, { passive: true })
+  raf = requestAnimationFrame(loop)
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(raf)
+    window.removeEventListener('mousemove', onMove)
+  })
+})
 </script>
 
 <template>
-  <div>
+  <div data-theme="noir">
     <!-- ============== COVER ============== -->
     <section class="border-b border-[var(--rule)]">
       <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-6 pb-0 md:grid-cols-12 md:gap-x-10 md:pt-10">
         <!-- Text column -->
-        <div class="ed-fade md:col-span-7 md:pr-6">
+        <div class="reveal md:col-span-7 md:pr-6">
           <div class="mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
-            <span class="meta">{{ dateline }}</span>
-            <span class="meta text-[var(--cobalt)]">№ 04 · Cover Story</span>
+            <span class="machine meta">{{ dateline }}</span>
+            <span class="machine meta text-[var(--cobalt)]">№ 04 · Cover Story</span>
           </div>
-
-          <p class="kicker kicker--cobalt mb-5">{{ t('site.slogan') }}</p>
-          <h1 class="mag-1">
-            {{ t('home.hero.title') }}<span class="text-[var(--cobalt)] mag-italic">.</span>
+          <p class="kicker kicker--cobalt mb-5">{{ t('home.hero.eyebrow') }}</p>
+          <h1 class="mag-1 mag-cjk headline">
+            {{ t('home.hero.title') }}<span ref="periodEl" class="period text-[var(--cobalt)]">.</span>
           </h1>
-          <p class="dek mt-8">{{ t('home.hero.subtitle') }}</p>
-
+          <div class="arc" aria-hidden="true" />
+          <p class="dek dek--cjk mt-8">{{ t('home.hero.subtitle') }}</p>
           <div class="mt-10 flex flex-wrap items-center gap-4">
-            <NuxtLink to="/learn" class="btn-ink">
-              {{ t('home.hero.startLearning') }}
-              <span aria-hidden="true">→</span>
-            </NuxtLink>
-            <NuxtLink to="/projects" class="link-ed text-base">
-              {{ t('home.hero.exploreProjects') }} →
-            </NuxtLink>
+            <NuxtLink to="/learn" class="btn-ink" data-magnet>{{ t('home.hero.startLearning') }} <span aria-hidden="true">→</span></NuxtLink>
+            <NuxtLink to="/projects" class="link-ed text-base">{{ t('home.hero.exploreProjects') }} →</NuxtLink>
           </div>
-
-          <hr class="rule-cobalt mt-12">
+          <!-- dispatch 微条：坐实「内容站有货」 -->
+          <p v-if="latestBlog?.[0]" class="machine mt-8 text-[0.72rem] text-[var(--ink-faint)]">
+            NOW READING · <NuxtLink :to="latestBlog[0].path" class="text-[var(--cobalt)]">{{ latestBlog[0].title }}</NuxtLink>
+          </p>
         </div>
 
         <!-- Image column -->
         <figure class="figure mt-10 md:col-span-5 md:mt-0">
-          <div class="ar-portrait overflow-hidden">
+          <div class="ar-portrait overflow-hidden duotone reveal">
             <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
           </div>
           <figcaption class="figure__caption">
@@ -235,6 +262,50 @@ const heroImg = useArticleImage('turing-cover', 'hero')
 </template>
 
 <style scoped>
+.headline {
+  position: relative;
+  line-height: 0.9;
+}
+.period {
+  display: inline-block;
+  animation: period-pulse 6s var(--ease-develop) infinite;
+}
+.arc {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  top: calc(var(--arc-y, 0.5) * 9rem);
+  background: linear-gradient(90deg, transparent, var(--cobalt-bright), transparent);
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 8px var(--cobalt));
+  pointer-events: none;
+  animation: line-reveal 800ms var(--ease-reel) 700ms both;
+}
+.headline.reveal,
+.headline {
+  /* 英文逐字交给 JS 可选；MVP 用整体揭示 */
+}
+.dek--cjk {
+  font-style: normal;
+  border-left: 2px solid var(--cobalt);
+  padding-left: 0.9em;
+}
+:lang(en) .dek--cjk {
+  border-left: 0;
+  padding-left: 0;
+  font-style: italic;
+}
+@media (prefers-reduced-motion: reduce) {
+  .period {
+    animation: none;
+  }
+  .arc {
+    animation: none;
+    top: 4.5rem;
+  }
+}
+
 /* Form invert inside dark newsletter */
 section.bg-\[var\(--ink-dark\)\] :deep(.field) {
   color: var(--paper-dark);
