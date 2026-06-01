@@ -1,11 +1,32 @@
+import { queryCollection } from '@nuxt/content/server'
 import { defineEventHandler, setResponseHeader } from 'h3'
+
+const AMPERSAND_RE = /&/g
+const DOUBLE_QUOTE_RE = /"/g
+const GREATER_THAN_RE = />/g
+const LESS_THAN_RE = /</g
+
+interface FeedItem {
+  title?: string
+  description?: string
+  date?: string
+  path?: string
+}
+
+function hasFeedFields(item: FeedItem): item is Required<FeedItem> {
+  return Boolean(item.title && item.description && item.date && item.path)
+}
 
 function escapeXml(str: string): string {
   return str
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
+    .replace(AMPERSAND_RE, '&amp;')
+    .replace(LESS_THAN_RE, '&lt;')
+    .replace(GREATER_THAN_RE, '&gt;')
+    .replace(DOUBLE_QUOTE_RE, '&quot;')
+}
+
+function cdata(str: string): string {
+  return `<![CDATA[${str.replaceAll(']]>', ']]]]><![CDATA[>')}]]>`
 }
 
 export default defineEventHandler(async (event) => {
@@ -13,6 +34,7 @@ export default defineEventHandler(async (event) => {
   const blog = await queryCollection(event, 'blog').order('date', 'DESC').limit(20).all()
 
   const allItems = [...learn, ...blog]
+    .filter(hasFeedFields)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 20)
 
@@ -20,16 +42,14 @@ export default defineEventHandler(async (event) => {
   const siteUrl = (config.public.siteUrl as string) || 'https://jmliu6.com'
 
   const rssItems = allItems
-    .map(
-      (item) => `
+    .map(item => `
     <item>
-      <title><![CDATA[${item.title}]]></title>
-      <link>${escapeXml(siteUrl + item.path)}</link>
-      <description><![CDATA[${item.description}]]></description>
+      <title>${cdata(item.title)}</title>
+      <link>${escapeXml(`${siteUrl}${item.path}`)}</link>
+      <description>${cdata(item.description)}</description>
       <pubDate>${new Date(item.date).toUTCString()}</pubDate>
-      <guid>${escapeXml(siteUrl + item.path)}</guid>
-    </item>`
-    )
+      <guid>${escapeXml(`${siteUrl}${item.path}`)}</guid>
+    </item>`)
     .join('')
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
@@ -39,7 +59,7 @@ export default defineEventHandler(async (event) => {
     <link>${escapeXml(siteUrl)}</link>
     <description>AI 技术实践者的知识库与工具箱</description>
     <language>zh-CN</language>
-    <atom:link href="${escapeXml(siteUrl + '/rss.xml')}" rel="self" type="application/rss+xml" />
+    <atom:link href="${escapeXml(`${siteUrl}/rss.xml`)}" rel="self" type="application/rss+xml" />
     ${rssItems}
   </channel>
 </rss>`

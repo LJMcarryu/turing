@@ -1,17 +1,18 @@
+import type { Metric } from 'web-vitals'
+
 export default defineNuxtPlugin(() => {
   if (typeof window === 'undefined')
     return
 
-  // Web Vitals monitoring
-  const reportWebVitals = (metric: any) => {
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('[Web Vitals]', metric.name, metric.value)
-    }
+  const analyticsWindow = window as Window & {
+    gtag?: (event: string, name: string, params: Record<string, unknown>) => void
+  }
 
+  // Web Vitals monitoring
+  const reportWebVitals = (metric: Metric) => {
     // Send to analytics in production
-    if (process.env.NODE_ENV === 'production' && (window as any).gtag) {
-      (window as any).gtag('event', metric.name, {
+    if (import.meta.env.PROD && analyticsWindow.gtag) {
+      analyticsWindow.gtag('event', metric.name, {
         value: Math.round(metric.name === 'CLS' ? metric.value * 1000 : metric.value),
         event_category: 'Web Vitals',
         event_label: metric.id,

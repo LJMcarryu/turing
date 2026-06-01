@@ -1,99 +1,72 @@
 <script setup lang="ts">
 const { t } = useI18n()
 
-useSeoMeta({
-  title: `${t('projects.title')} — Turing`,
-  description: t('projects.subtitle'),
-})
+useSeoMeta({ title: `${t('projects.title')} — Turing`, description: t('projects.subtitle') })
 
 const { data: projects, error } = await useAsyncData('projects-all', () =>
-  queryCollection('projects').all()
+  queryCollection('projects').all(),
 )
+if (error.value) throw createError({ statusCode: 500, message: t('error.loadFailed') })
 
-if (error.value) {
-  throw createError({ statusCode: 500, message: t('error.loadFailed') })
-}
+const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 </script>
 
 <template>
-  <div class="gradient-bg min-h-screen">
-    <!-- Header -->
-    <section class="px-4 py-20">
-      <div class="mx-auto max-w-6xl">
-        <div class="text-center">
-          <h1 class="text-5xl font-bold md:text-6xl">
-            <span class="text-gradient">{{ t('projects.title') }}</span>
-          </h1>
-          <p class="mx-auto mt-4 max-w-2xl text-xl text-brand-muted">
-            {{ t('projects.subtitle') }}
-          </p>
+  <article>
+    <header class="border-b border-[var(--ink)]">
+      <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-12">
+        <div class="mb-6 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
+          <span class="meta text-[var(--cobalt)]">№ 02 — Working Ledger</span>
+          <span class="meta">{{ projects?.length ?? 0 }} entries</span>
         </div>
+        <p class="kicker kicker--cobalt mb-5">In progress &amp; in production</p>
+        <h1 class="mag-1">{{ t('projects.title') }}<span class="mag-italic text-[var(--cobalt)]">.</span></h1>
+        <p class="dek mt-6 max-w-[44ch]">{{ t('projects.subtitle') }}</p>
       </div>
-    </section>
+    </header>
 
-    <!-- Projects Grid -->
-    <section class="px-4 py-12">
-      <div class="mx-auto max-w-6xl">
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <NuxtLink
-            v-for="(project, index) in projects"
-            :key="project.path"
-            :to="project.path"
-            class="card group p-6"
-            :style="{ animationDelay: `${index * 100}ms` }"
+    <section class="mx-auto max-w-[1320px] px-6 py-16">
+      <!-- Editorial alternating split layout, image-led -->
+      <div v-if="projects?.length" class="flex flex-col gap-24">
+        <NuxtLink
+          v-for="(project, i) in projects"
+          :key="project.path"
+          :to="project.path"
+          class="group grid gap-x-10 gap-y-6 md:grid-cols-12"
+        >
+          <figure
+            class="figure figure--zoom md:col-span-7"
+            :class="i % 2 === 0 ? 'md:order-1' : 'md:order-2'"
           >
-            <!-- Status Badge -->
-            <div class="mb-4 flex items-center justify-between">
-              <span
-                class="rounded-full px-3 py-1 text-xs font-bold uppercase"
-                :class="{
-                  'bg-brand-primary/10 text-brand-primary': project.status === 'active',
-                  'bg-brand-secondary/10 text-brand-secondary': project.status === 'wip',
-                  'bg-brand-subtle/10 text-brand-subtle': project.status === 'archived',
-                }"
-              >
-                {{ t(`projects.status.${project.status}`) }}
-              </span>
-              <Icon
-                v-if="project.github"
-                name="heroicons:arrow-top-right-on-square"
-                class="h-5 w-5 text-brand-subtle transition-colors group-hover:text-brand-primary"
-              />
+            <div class="ar-wide overflow-hidden">
+              <img :src="useArticleImage(project.path, 'wide').src" :alt="useArticleImage(project.path, 'wide').alt" loading="lazy">
             </div>
-
-            <!-- Title & Description -->
-            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
-              {{ project.title }}
-            </h3>
-            <p class="mt-3 line-clamp-3 text-sm text-brand-muted">
-              {{ project.description }}
-            </p>
-
-            <!-- Tags -->
-            <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
-              <span
-                v-for="tag in project.tags.slice(0, 4)"
-                :key="tag"
-                class="rounded-md bg-brand-surface px-2 py-1 text-xs text-brand-subtle"
-              >
-                {{ tag }}
-              </span>
+            <figcaption class="figure__caption">
+              <span class="figure__caption-num">Fig. {{ String(i + 1).padStart(2, '0') }}</span>
+              <span>{{ project.title }}</span>
+            </figcaption>
+          </figure>
+          <div
+            class="md:col-span-5 md:self-center"
+            :class="i % 2 === 0 ? 'md:order-2' : 'md:order-1'"
+          >
+            <div class="mb-3 flex flex-wrap items-baseline gap-3">
+              <span class="pill" :class="projectStatusClass(project.status)">{{ projectStatusLabel(project.status) }}</span>
             </div>
-
-            <!-- GitHub Link -->
-            <div v-if="project.github" class="mt-4 flex items-center gap-2 text-sm text-brand-primary">
-              <Icon name="heroicons:code-bracket" class="h-4 w-4" />
-              <span class="font-semibold">{{ t('common.viewSource') }}</span>
+            <h2 class="mag-2 transition-colors group-hover:text-[var(--cobalt)]">{{ project.title }}</h2>
+            <p class="dek mt-5 text-base font-body not-italic">{{ project.description }}</p>
+            <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-x-4">
+              <span v-for="tag in project.tags.slice(0, 5)" :key="tag" class="tag">{{ tag }}</span>
             </div>
-          </NuxtLink>
-        </div>
+            <p class="link-more mt-6 inline-flex">Read entry</p>
+          </div>
+        </NuxtLink>
+      </div>
 
-        <!-- Empty State -->
-        <div v-if="!projects?.length" class="py-20 text-center">
-          <Icon name="heroicons:cube" class="mx-auto h-16 w-16 text-brand-subtle" />
-          <p class="mt-4 text-brand-muted">{{ t('projects.noProjects') }}</p>
-        </div>
+      <div v-else class="py-20 text-center">
+        <p class="kicker mb-3">Empty ledger</p>
+        <p class="dek">{{ t('projects.noProjects') }}</p>
       </div>
     </section>
-  </div>
+  </article>
 </template>

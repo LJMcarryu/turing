@@ -11,204 +11,246 @@ useSeoMeta({
 })
 
 const { data: featuredLearn } = await useAsyncData('featured-learn', () =>
-  queryCollection('learn').where('featured', '=', true).limit(3).all()
+  queryCollection('learn').where('featured', '=', true).limit(4).all(),
 )
-
 const { data: latestBlog } = await useAsyncData('latest-blog', () =>
-  queryCollection('blog').order('date', 'DESC').limit(3).all()
+  queryCollection('blog').order('date', 'DESC').limit(4).all(),
+)
+const { data: projects } = await useAsyncData('projects', () =>
+  queryCollection('projects').limit(4).all(),
 )
 
-const { data: projects } = await useAsyncData('projects', () =>
-  queryCollection('projects').limit(3).all()
-)
+const today = new Date()
+const dateline = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+
+const heroImg = useArticleImage('turing-cover', 'hero')
 </script>
 
 <template>
-  <div class="gradient-bg min-h-screen">
-    <!-- Hero Section -->
-    <section class="relative overflow-hidden px-4 py-32">
-      <div class="mx-auto max-w-6xl">
-        <div class="animate-fade-in-up text-center">
-          <h1 class="text-6xl font-bold leading-tight md:text-7xl lg:text-8xl">
-            <span class="text-gradient">Turing</span>
+  <div>
+    <!-- ============== COVER ============== -->
+    <section class="border-b border-[var(--rule)]">
+      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-6 pb-0 md:grid-cols-12 md:gap-x-10 md:pt-10">
+        <!-- Text column -->
+        <div class="ed-fade md:col-span-7 md:pr-6">
+          <div class="mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
+            <span class="meta">{{ dateline }}</span>
+            <span class="meta text-[var(--cobalt)]">№ 04 · Cover Story</span>
+          </div>
+
+          <p class="kicker kicker--cobalt mb-5">{{ t('site.slogan') }}</p>
+          <h1 class="mag-1">
+            {{ t('home.hero.title') }}<span class="text-[var(--cobalt)] mag-italic">.</span>
           </h1>
-          <p class="mx-auto mt-6 max-w-2xl text-xl text-brand-muted md:text-2xl">
-            {{ t('home.hero.title') }}
-          </p>
-          <p class="mx-auto mt-4 max-w-3xl text-base text-brand-subtle">
-            {{ t('home.hero.subtitle') }}
-          </p>
-          <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-            <NuxtLink to="/learn" class="btn-primary">
-              <Icon name="heroicons:academic-cap" class="h-5 w-5" />
+          <p class="dek mt-8">{{ t('home.hero.subtitle') }}</p>
+
+          <div class="mt-10 flex flex-wrap items-center gap-4">
+            <NuxtLink to="/learn" class="btn-ink">
               {{ t('home.hero.startLearning') }}
+              <span aria-hidden="true">→</span>
             </NuxtLink>
-            <NuxtLink to="/projects" class="btn-secondary">
-              <Icon name="heroicons:code-bracket" class="h-5 w-5" />
-              {{ t('home.hero.exploreProjects') }}
+            <NuxtLink to="/projects" class="link-ed text-base">
+              {{ t('home.hero.exploreProjects') }} →
             </NuxtLink>
           </div>
-        </div>
-      </div>
 
-      <!-- Decorative elements -->
-      <div class="pointer-events-none absolute inset-0 overflow-hidden">
-        <div class="glow-effect absolute -right-40 -top-40 h-80 w-80 rounded-full bg-brand-primary opacity-10 blur-3xl"></div>
-        <div class="glow-effect absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-brand-accent opacity-10 blur-3xl" style="animation-delay: 1.5s"></div>
+          <hr class="rule-cobalt mt-12">
+        </div>
+
+        <!-- Image column -->
+        <figure class="figure mt-10 md:col-span-5 md:mt-0">
+          <div class="ar-portrait overflow-hidden">
+            <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
+          </div>
+          <figcaption class="figure__caption">
+            <span class="figure__caption-num">Fig. 01</span>
+            <span>A study, in fragments — on the practice of building with AI.</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- Featured Learn -->
-    <section v-if="featuredLearn?.length" class="px-4 py-16">
-      <div class="mx-auto max-w-6xl">
-        <div class="mb-10 flex items-end justify-between">
-          <div>
-            <h2 class="text-4xl font-bold">{{ t('home.learn.title') }}</h2>
-            <p class="mt-2 text-brand-muted">{{ t('home.learn.subtitle') }}</p>
-          </div>
-          <NuxtLink to="/learn" class="group flex items-center gap-2 text-brand-primary transition-all hover:gap-3">
-            <span class="font-semibold">{{ t('common.viewAll') }}</span>
-            <Icon name="heroicons:arrow-right" class="h-5 w-5" />
-          </NuxtLink>
+    <!-- ============== LEARN ============== -->
+    <section v-if="featuredLearn?.length" class="mx-auto max-w-[1320px] px-6 py-24">
+      <div class="section-head mb-12">
+        <div>
+          <p class="kicker kicker--cobalt mb-2">№ 01 — Field Manual</p>
+          <h2 class="mag-2">{{ t('home.learn.title') }}</h2>
+          <p class="dek mt-4">{{ t('home.learn.subtitle') }}</p>
         </div>
-        <div class="grid gap-6 md:grid-cols-3">
+        <NuxtLink to="/learn" class="link-more shrink-0">{{ t('common.viewAll') }}</NuxtLink>
+      </div>
+
+      <div class="grid gap-x-8 gap-y-14 md:grid-cols-12">
+        <!-- Featured large -->
+        <NuxtLink
+          v-if="featuredLearn[0]"
+          :to="featuredLearn[0].path"
+          class="tile group md:col-span-7"
+        >
+          <figure class="figure figure--zoom">
+            <div class="ar-wide overflow-hidden">
+              <img :src="useArticleImage(featuredLearn[0].path, 'wide').src" :alt="useArticleImage(featuredLearn[0].path, 'wide').alt" loading="lazy">
+            </div>
+          </figure>
+          <div>
+            <div class="mb-3 flex flex-wrap items-baseline gap-3">
+              <span class="meta text-[var(--cobalt)]">Field Manual</span>
+              <LevelBadge v-if="featuredLearn[0].level" :level="featuredLearn[0].level" />
+            </div>
+            <h3 class="mag-3 transition-colors group-hover:text-[var(--cobalt)]">{{ featuredLearn[0].title }}</h3>
+            <p class="mt-3 text-[1rem] text-[var(--ink-soft)] max-w-[60ch]">{{ featuredLearn[0].description }}</p>
+            <p v-if="featuredLearn[0].readingTime" class="meta mt-4">{{ featuredLearn[0].readingTime }} {{ t('common.min') }} read</p>
+          </div>
+        </NuxtLink>
+
+        <!-- Secondary stack -->
+        <div class="md:col-span-5 flex flex-col gap-10">
           <NuxtLink
-            v-for="(article, index) in featuredLearn"
+            v-for="article in featuredLearn.slice(1, 4)"
             :key="article.path"
             :to="article.path"
-            class="card group p-6"
-            :style="{ animationDelay: `${index * 100}ms` }"
+            class="group grid grid-cols-[1fr_140px] items-start gap-5 border-t border-[var(--rule)] pt-6"
           >
-            <div class="mb-3 flex items-center justify-between">
-              <span class="rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-bold text-brand-primary">
-                {{ t('home.learn.badge') }}
-              </span>
-              <LevelBadge v-if="article.level" :level="article.level" />
+            <div>
+              <div class="mb-2 flex flex-wrap items-baseline gap-3">
+                <span class="meta text-[var(--cobalt)]">Field Manual</span>
+                <LevelBadge v-if="article.level" :level="article.level" />
+              </div>
+              <h4 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ article.title }}</h4>
+              <p v-if="article.readingTime" class="meta mt-3">{{ article.readingTime }} {{ t('common.min') }}</p>
             </div>
-            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
-              {{ article.title }}
-            </h3>
-            <p class="mt-3 line-clamp-2 text-sm text-brand-muted">
-              {{ article.description }}
-            </p>
-            <div v-if="article.readingTime" class="mt-4 flex items-center gap-2 text-xs text-brand-subtle">
-              <Icon name="heroicons:clock" class="h-4 w-4" />
-              <span>{{ article.readingTime }} {{ t('common.readingTime') }}</span>
+            <div class="ar-thumb overflow-hidden">
+              <img :src="useArticleImage(article.path, 'thumb').src" :alt="useArticleImage(article.path, 'thumb').alt" loading="lazy" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]">
             </div>
           </NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- Projects -->
-    <section v-if="projects?.length" class="px-4 py-16">
-      <div class="mx-auto max-w-6xl">
-        <div class="mb-10 flex items-end justify-between">
+    <!-- ============== PROJECTS — image-led grid ============== -->
+    <section v-if="projects?.length" class="border-y border-[var(--rule)] bg-[var(--paper-2)]">
+      <div class="mx-auto max-w-[1320px] px-6 py-24">
+        <div class="section-head mb-12">
           <div>
-            <h2 class="text-4xl font-bold">{{ t('home.projects.title') }}</h2>
-            <p class="mt-2 text-brand-muted">{{ t('home.projects.subtitle') }}</p>
+            <p class="kicker kicker--cobalt mb-2">№ 02 — Working Ledger</p>
+            <h2 class="mag-2">{{ t('home.projects.title') }}</h2>
+            <p class="dek mt-4">{{ t('home.projects.subtitle') }}</p>
           </div>
-          <NuxtLink to="/projects" class="group flex items-center gap-2 text-brand-primary transition-all hover:gap-3">
-            <span class="font-semibold">{{ t('common.viewAll') }}</span>
-            <Icon name="heroicons:arrow-right" class="h-5 w-5" />
-          </NuxtLink>
+          <NuxtLink to="/projects" class="link-more shrink-0">{{ t('common.viewAll') }}</NuxtLink>
         </div>
-        <div class="grid gap-6 md:grid-cols-3">
+
+        <!-- Asymmetric 4-up: one tall portrait + 3 cards -->
+        <div class="grid gap-x-8 gap-y-12 md:grid-cols-12">
           <NuxtLink
-            v-for="(project, index) in projects"
+            v-if="projects[0]"
+            :to="projects[0].path"
+            class="tile group md:col-span-5 md:row-span-2"
+          >
+            <figure class="figure figure--zoom">
+              <div class="ar-portrait overflow-hidden">
+                <img :src="useArticleImage(projects[0].path, 'portrait').src" :alt="useArticleImage(projects[0].path, 'portrait').alt" loading="lazy">
+              </div>
+            </figure>
+            <div>
+              <div class="mb-2"><span class="pill pill--active">Featured</span></div>
+              <h3 class="mag-3 transition-colors group-hover:text-[var(--cobalt)]">{{ projects[0].title }}</h3>
+              <p class="tile__dek mt-3">{{ projects[0].description }}</p>
+              <div v-if="projects[0].tags?.length" class="mt-3 flex flex-wrap gap-x-3">
+                <span v-for="tag in projects[0].tags.slice(0, 4)" :key="tag" class="tag">{{ tag }}</span>
+              </div>
+            </div>
+          </NuxtLink>
+
+          <NuxtLink
+            v-for="(project, i) in projects.slice(1, 4)"
             :key="project.path"
             :to="project.path"
-            class="card group p-6"
-            :style="{ animationDelay: `${index * 100}ms` }"
+            class="tile group md:col-span-7"
+            :class="i % 2 === 0 ? 'md:grid md:grid-cols-[200px_1fr] md:gap-6 md:flex-row' : 'md:grid md:grid-cols-[1fr_200px] md:gap-6'"
           >
-            <div class="mb-3">
-              <span class="rounded-full bg-brand-accent/10 px-3 py-1 text-xs font-bold text-brand-accent">
-                {{ t('home.projects.badge') }}
-              </span>
-            </div>
-            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
-              {{ project.title }}
-            </h3>
-            <p class="mt-3 line-clamp-2 text-sm text-brand-muted">
-              {{ project.description }}
-            </p>
-            <div v-if="project.tags?.length" class="mt-4 flex flex-wrap gap-2">
-              <span
-                v-for="tag in project.tags.slice(0, 3)"
-                :key="tag"
-                class="rounded-md bg-brand-surface px-2 py-1 text-xs text-brand-subtle"
-              >
-                {{ tag }}
-              </span>
+            <figure class="figure figure--zoom" :class="i % 2 === 0 ? 'md:order-1' : 'md:order-2'">
+              <div class="ar-square overflow-hidden">
+                <img :src="useArticleImage(project.path, 'square').src" :alt="useArticleImage(project.path, 'square').alt" loading="lazy">
+              </div>
+            </figure>
+            <div :class="i % 2 === 0 ? 'md:order-2' : 'md:order-1'">
+              <span class="meta mb-2 inline-block">{{ t(`projects.status.${project.status}`) }}</span>
+              <h3 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ project.title }}</h3>
+              <p class="tile__dek mt-2 line-clamp-2">{{ project.description }}</p>
             </div>
           </NuxtLink>
         </div>
       </div>
     </section>
 
-    <!-- Latest Blog -->
-    <section v-if="latestBlog?.length" class="px-4 py-16">
-      <div class="mx-auto max-w-6xl">
-        <div class="mb-10 flex items-end justify-between">
+    <!-- ============== BLOG ============== -->
+    <section v-if="latestBlog?.length" class="mx-auto max-w-[1320px] px-6 py-24">
+      <div class="section-head mb-12">
+        <div>
+          <p class="kicker kicker--cobalt mb-2">№ 03 — Dispatches</p>
+          <h2 class="mag-2">{{ t('home.blog.title') }}</h2>
+          <p class="dek mt-4">{{ t('home.blog.subtitle') }}</p>
+        </div>
+        <NuxtLink to="/blog" class="link-more shrink-0">{{ t('common.viewAll') }}</NuxtLink>
+      </div>
+
+      <div class="grid gap-x-8 gap-y-12 md:grid-cols-3">
+        <NuxtLink
+          v-for="post in latestBlog.slice(0, 3)"
+          :key="post.path"
+          :to="post.path"
+          class="tile group"
+        >
+          <figure class="figure figure--zoom">
+            <div class="ar-card overflow-hidden">
+              <img :src="useArticleImage(post.path, 'card').src" :alt="useArticleImage(post.path, 'card').alt" loading="lazy">
+            </div>
+          </figure>
           <div>
-            <h2 class="text-4xl font-bold">{{ t('home.blog.title') }}</h2>
-            <p class="mt-2 text-brand-muted">{{ t('home.blog.subtitle') }}</p>
+            <span class="meta">{{ formatDate(post.date) }}</span>
+            <h3 class="mag-4 mt-2 transition-colors group-hover:text-[var(--cobalt)]">{{ post.title }}</h3>
+            <p class="tile__dek mt-2 line-clamp-2">{{ post.description }}</p>
           </div>
-          <NuxtLink to="/blog" class="group flex items-center gap-2 text-brand-primary transition-all hover:gap-3">
-            <span class="font-semibold">{{ t('common.viewAll') }}</span>
-            <Icon name="heroicons:arrow-right" class="h-5 w-5" />
-          </NuxtLink>
-        </div>
-        <div class="grid gap-6 md:grid-cols-3">
-          <NuxtLink
-            v-for="(post, index) in latestBlog"
-            :key="post.path"
-            :to="post.path"
-            class="card group p-6"
-            :style="{ animationDelay: `${index * 100}ms` }"
-          >
-            <div class="mb-3">
-              <span class="rounded-full bg-brand-secondary/10 px-3 py-1 text-xs font-bold text-brand-secondary">
-                {{ t('home.blog.badge') }}
-              </span>
-            </div>
-            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
-              {{ post.title }}
-            </h3>
-            <p class="mt-3 line-clamp-2 text-sm text-brand-muted">
-              {{ post.description }}
-            </p>
-            <div class="mt-4 flex items-center gap-3 text-xs text-brand-subtle">
-              <span>{{ formatDate(post.date) }}</span>
-              <span v-if="post.readingTime">{{ post.readingTime }} {{ t('common.min') }}</span>
-            </div>
-          </NuxtLink>
-        </div>
+        </NuxtLink>
       </div>
     </section>
 
-    <!-- Newsletter CTA -->
-    <section class="px-4 py-20">
-      <div class="mx-auto max-w-4xl">
-        <div class="card relative overflow-hidden p-12 text-center">
-          <div class="relative z-10">
-            <h2 class="text-3xl font-bold md:text-4xl">
-              {{ t('home.newsletter.title') }} <span class="text-gradient">{{ t('home.newsletter.titleHighlight') }}</span>
-            </h2>
-            <p class="mx-auto mt-4 max-w-2xl text-brand-muted">
-              {{ t('home.newsletter.description') }}
-            </p>
-            <div class="mt-8 flex justify-center">
-              <NewsletterForm />
-            </div>
-          </div>
-          <!-- Background decoration -->
-          <div class="pointer-events-none absolute inset-0 opacity-30">
-            <div class="absolute right-0 top-0 h-40 w-40 rounded-full bg-brand-primary blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 h-40 w-40 rounded-full bg-brand-accent blur-3xl"></div>
-          </div>
+    <!-- ============== NEWSLETTER ============== -->
+    <section class="bg-[var(--ink-dark)] text-[var(--paper-dark)]">
+      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-10 px-6 py-24 md:grid-cols-12 md:gap-x-12">
+        <div class="md:col-span-6">
+          <p class="kicker mb-4 !text-[var(--cobalt-bright)]">A letter, on occasion</p>
+          <h2 class="mag-1 !text-[var(--paper-dark)]">
+            {{ t('home.newsletter.title') }} <span class="mag-italic text-[var(--cobalt-bright)]">{{ t('home.newsletter.titleHighlight') }}</span>
+          </h2>
+        </div>
+        <div class="md:col-span-6 md:pl-8 md:border-l md:border-[oklch(0.92_0.005_80/0.2)]">
+          <p class="dek !text-[var(--paper-dark)] mb-8">{{ t('home.newsletter.description') }}</p>
+          <NewsletterForm />
         </div>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+/* Form invert inside dark newsletter */
+section.bg-\[var\(--ink-dark\)\] :deep(.field) {
+  color: var(--paper-dark);
+  border-bottom-color: var(--paper-dark);
+}
+section.bg-\[var\(--ink-dark\)\] :deep(.field::placeholder) { color: oklch(0.92 0.005 80 / 0.5); }
+section.bg-\[var\(--ink-dark\)\] :deep(.field:focus) { border-bottom-color: var(--cobalt-bright); }
+section.bg-\[var\(--ink-dark\)\] :deep(.kicker) { color: var(--paper-dark); opacity: 0.7; }
+section.bg-\[var\(--ink-dark\)\] :deep(.btn-ink) {
+  background: var(--paper-dark);
+  color: var(--ink-dark);
+  border-color: var(--paper-dark);
+}
+section.bg-\[var\(--ink-dark\)\] :deep(.btn-ink:hover) {
+  background: var(--cobalt-bright);
+  color: var(--paper);
+  border-color: var(--cobalt-bright);
+}
+</style>

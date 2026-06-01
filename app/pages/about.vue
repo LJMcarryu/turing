@@ -2,89 +2,100 @@
 const { t } = useI18n()
 const appConfig = useAppConfig()
 
-useSeoMeta({
-  title: `${t('about.title')} — Turing`,
-  description: t('site.description'),
-})
+useSeoMeta({ title: `${t('about.title')} — Turing`, description: t('site.description') })
+
+const portrait = useArticleImage('about-jimmy-portrait', 'portrait')
 </script>
 
 <template>
-  <div class="gradient-bg min-h-screen">
-    <!-- Header -->
-    <section class="px-4 py-20">
-      <div class="mx-auto max-w-4xl">
-        <div class="text-center">
-          <h1 class="text-5xl font-bold md:text-6xl">
-            <span class="text-gradient">{{ t('about.title') }}</span>
-          </h1>
+  <article>
+    <section class="border-b border-[var(--rule)]">
+      <div class="mx-auto grid max-w-[1320px] grid-cols-1 gap-0 px-6 pt-8 md:grid-cols-12 md:gap-x-10">
+        <div class="md:col-span-7 md:pr-6">
+          <div class="mb-5 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
+            <span class="meta text-[var(--cobalt)]">№ 04 · About</span>
+            <span class="meta">Colophon</span>
+          </div>
+          <p class="kicker kicker--cobalt mb-5">{{ t('about.title') }}</p>
+          <h1 class="mag-1">{{ t('about.greeting') }} <span class="mag-italic">Jimmy Liu.</span></h1>
+          <p class="dek mt-8">{{ t('about.intro') }}</p>
         </div>
+
+        <figure class="figure mt-10 md:col-span-5 md:mt-0 md:pb-12">
+          <div class="ar-portrait overflow-hidden">
+            <img :src="portrait.src" :alt="portrait.alt" loading="eager">
+          </div>
+          <figcaption class="figure__caption">
+            <span class="figure__caption-num">Fig. 01</span>
+            <span>A working desk, a long afternoon.</span>
+          </figcaption>
+        </figure>
       </div>
     </section>
 
-    <!-- Content -->
-    <section class="px-4 py-12">
-      <div class="mx-auto max-w-3xl">
-        <div class="card p-8 md:p-12">
-          <div class="space-y-6 text-base leading-relaxed text-brand-muted">
-            <p class="text-xl text-brand-text">
-              {{ t('about.greeting') }} <span class="text-gradient font-bold">Jimmy Liu</span>，Turing {{ t('about.greeting') === '你好，我是' ? '的创建者。' : "'s creator." }}
-            </p>
+    <section class="mx-auto max-w-[1320px] px-6 py-20">
+      <div class="grid gap-12 md:grid-cols-12">
+        <div class="md:col-span-8">
+          <p class="kicker mb-5">{{ t('about.findHere') }}</p>
+          <ol class="list-none">
+            <li>
+              <NuxtLink to="/learn" class="entry">
+                <span class="entry__num">01</span>
+                <div>
+                  <h3 class="entry__title">{{ t('nav.learn') }}</h3>
+                  <p class="entry__dek">{{ t('about.learnDesc') }}</p>
+                </div>
+                <div class="entry__meta">↗</div>
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/projects" class="entry">
+                <span class="entry__num">02</span>
+                <div>
+                  <h3 class="entry__title">{{ t('nav.projects') }}</h3>
+                  <p class="entry__dek">{{ t('about.projectsDesc') }}</p>
+                </div>
+                <div class="entry__meta">↗</div>
+              </NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/blog" class="entry">
+                <span class="entry__num">03</span>
+                <div>
+                  <h3 class="entry__title">{{ t('nav.blog') }}</h3>
+                  <p class="entry__dek">{{ t('about.blogDesc') }}</p>
+                </div>
+                <div class="entry__meta">↗</div>
+              </NuxtLink>
+            </li>
+          </ol>
 
-            <p>
-              <strong class="text-brand-text">Turing</strong> {{ t('about.intro') }}
-            </p>
-
-            <div class="my-8 border-l-4 border-brand-primary bg-brand-surface p-6">
-              <h2 class="mb-4 text-lg font-bold text-brand-text">{{ t('about.findHere') }}</h2>
-              <ul class="space-y-3">
-                <li class="flex items-start gap-3">
-                  <Icon name="heroicons:academic-cap" class="mt-1 h-5 w-5 shrink-0 text-brand-primary" />
-                  <div>
-                    <strong class="text-brand-text">{{ t('nav.learn') }}</strong>
-                    <span class="text-brand-muted"> — {{ t('about.learnDesc') }}</span>
-                  </div>
-                </li>
-                <li class="flex items-start gap-3">
-                  <Icon name="heroicons:cube" class="mt-1 h-5 w-5 shrink-0 text-brand-accent" />
-                  <div>
-                    <strong class="text-brand-text">{{ t('nav.projects') }}</strong>
-                    <span class="text-brand-muted"> — {{ t('about.projectsDesc') }}</span>
-                  </div>
-                </li>
-                <li class="flex items-start gap-3">
-                  <Icon name="heroicons:document-text" class="mt-1 h-5 w-5 shrink-0 text-brand-secondary" />
-                  <div>
-                    <strong class="text-brand-text">{{ t('nav.blog') }}</strong>
-                    <span class="text-brand-muted"> — {{ t('about.blogDesc') }}</span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-
-            <p>
-              {{ t('about.subscribePrompt') }}
-              <NuxtLink to="/newsletter" class="text-brand-primary hover:underline">{{ t('about.subscribeLink') }}</NuxtLink>
-              {{ t('about.subscribeEnd') }}
-            </p>
-          </div>
+          <hr class="rule my-12">
+          <p class="dek">
+            {{ t('about.subscribePrompt') }}
+            <NuxtLink to="/newsletter" class="link-ed">{{ t('about.subscribeLink') }}</NuxtLink>{{ t('about.subscribeEnd') }}
+          </p>
         </div>
 
-        <!-- Contact Card -->
-        <div class="card mt-8 p-8">
-          <h2 class="text-2xl font-bold">{{ t('about.contact') }}</h2>
-          <div class="mt-6 flex gap-4">
-            <a
-              v-if="appConfig.social.github"
-              :href="appConfig.social.github"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex h-12 w-12 items-center justify-center rounded-lg bg-brand-surface text-brand-muted transition-all hover:bg-brand-primary hover:text-brand-bg"
-            >
-              <Icon name="heroicons:code-bracket" class="h-6 w-6" />
-            </a>
-          </div>
-        </div>
+        <aside class="md:col-span-4">
+          <p class="kicker mb-5">{{ t('about.contact') }}</p>
+          <ul class="flex flex-col gap-4">
+            <li v-if="appConfig.social.github">
+              <a :href="appConfig.social.github" target="_blank" rel="noopener noreferrer" class="link-ed inline-flex items-center gap-2 text-base">
+                <span>GitHub</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          </ul>
+          <hr class="rule my-8">
+          <p class="kicker mb-3">Imprint</p>
+          <p class="caption">
+            Edited &amp; written by {{ appConfig.site.author }}.<br>
+            Set in Bodoni Moda &amp; Albert Sans.<br>
+            Imagery via picsum.photos.
+          </p>
+        </aside>
       </div>
     </section>
-  </div>
+  </article>
 </template>

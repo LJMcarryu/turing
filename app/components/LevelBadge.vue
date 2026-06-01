@@ -1,19 +1,14 @@
 <script setup lang="ts">
+defineProps<{ level: 'beginner' | 'intermediate' | 'advanced' }>()
+
 const { t } = useI18n()
-
-const props = defineProps<{
-  level: 'beginner' | 'intermediate' | 'advanced'
-}>()
-
-const config = {
-  beginner: { class: 'bg-green-500/10 text-green-400' },
-  intermediate: { class: 'bg-yellow-500/10 text-yellow-400' },
-  advanced: { class: 'bg-red-500/10 text-red-400' },
-}
 </script>
 
 <template>
-  <span class="inline-block rounded-full px-2.5 py-0.5 text-xs font-medium" :class="config[level].class">
-    {{ t(`learn.levels.${level}`) }}
+  <span class="inline-flex items-baseline gap-1.5 font-body text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[var(--ink-soft)]">
+    <span class="mag-italic text-[var(--cobalt)]">
+      {{ level === 'beginner' ? 'I' : level === 'intermediate' ? 'II' : 'III' }}
+    </span>
+    <span>{{ t(`learn.levels.${level}`) }}</span>
   </span>
 </template>

@@ -1,155 +1,120 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 const mobileMenuOpen = ref(false)
-const { locale, locales, setLocale } = useI18n()
-const { t } = useI18n()
-
+const { locale, locales, setLocale, t } = useI18n()
 const route = useRoute()
-watch(() => route.path, () => { mobileMenuOpen.value = false })
-
-const availableLocales = computed(() => {
-  return locales.value.filter(i => i.code !== locale.value)
+watch(() => route.path, () => {
+  mobileMenuOpen.value = false
 })
 
-const switchLocale = (code: string) => {
-  setLocale(code)
-}
+const availableLocales = computed(() =>
+  locales.value.filter(i => i.code !== locale.value),
+)
+const switchLocale = (code: string) => setLocale(code as typeof locale.value)
+
+const nav = computed(() => [
+  { to: '/learn', label: t('nav.learn') },
+  { to: '/projects', label: t('nav.projects') },
+  { to: '/blog', label: t('nav.blog') },
+  { to: '/about', label: t('nav.about') },
+])
+
+const issue = computed(() => {
+  const now = new Date()
+  const q = Math.floor(now.getMonth() / 3) + 1
+  return `Issue ${String(q).padStart(2, '0')} · ${now.getFullYear()}`
+})
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 border-b border-brand-border bg-brand-bg/90 backdrop-blur-xl">
-    <div class="mx-auto flex h-20 max-w-6xl items-center justify-between px-4">
-      <!-- Logo -->
-      <NuxtLink to="/" class="group flex items-center gap-3">
-        <div class="relative h-10 w-10 overflow-hidden rounded-xl bg-gradient-to-br from-brand-primary to-brand-accent transition-transform group-hover:scale-110">
-          <div class="absolute inset-0 bg-brand-bg opacity-0 transition-opacity group-hover:opacity-20"></div>
-        </div>
-        <span class="text-xl font-bold tracking-tight">{{ appConfig.site.name }}</span>
-      </NuxtLink>
-
-      <!-- Desktop Navigation -->
-      <nav class="hidden items-center gap-8 md:flex">
-        <NuxtLink
-          to="/learn"
-          class="relative text-sm font-semibold text-brand-muted transition-colors hover:text-brand-text"
-          active-class="text-brand-primary"
-        >
-          {{ t('nav.learn') }}
-        </NuxtLink>
-        <NuxtLink
-          to="/projects"
-          class="relative text-sm font-semibold text-brand-muted transition-colors hover:text-brand-text"
-          active-class="text-brand-primary"
-        >
-          {{ t('nav.projects') }}
-        </NuxtLink>
-        <NuxtLink
-          to="/blog"
-          class="relative text-sm font-semibold text-brand-muted transition-colors hover:text-brand-text"
-          active-class="text-brand-primary"
-        >
-          {{ t('nav.blog') }}
-        </NuxtLink>
-        <NuxtLink
-          to="/about"
-          class="relative text-sm font-semibold text-brand-muted transition-colors hover:text-brand-text"
-          active-class="text-brand-primary"
-        >
-          {{ t('nav.about') }}
-        </NuxtLink>
-
-        <!-- Language Switcher -->
-        <button
-          v-for="loc in availableLocales"
-          :key="loc.code"
-          @click="switchLocale(loc.code)"
-          class="rounded-lg px-3 py-1.5 text-sm font-medium text-brand-muted transition-colors hover:bg-brand-surface hover:text-brand-text"
-          :title="`Switch to ${loc.name}`"
-        >
-          {{ loc.code === 'zh-CN' ? '中' : 'EN' }}
-        </button>
-
-        <NuxtLink
-          to="/newsletter"
-          class="btn-primary px-5 py-2 text-sm"
-        >
-          <Icon name="heroicons:envelope" class="h-4 w-4" />
-          {{ t('nav.subscribe') }}
-        </NuxtLink>
-      </nav>
-
-      <!-- Mobile Menu Button -->
-      <button
-        class="rounded-lg p-2 transition-colors hover:bg-brand-surface md:hidden"
-        :aria-label="t('common.menu')"
-        @click="mobileMenuOpen = !mobileMenuOpen"
-      >
-        <Icon :name="mobileMenuOpen ? 'heroicons:x-mark' : 'heroicons:bars-3'" class="h-6 w-6" />
-      </button>
+  <header class="relative z-50 bg-[var(--paper)]">
+    <!-- Top thin masthead bar -->
+    <div class="border-b border-[var(--rule)]">
+      <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-3 px-6 py-2">
+        <span class="meta">{{ t('site.slogan') }}</span>
+        <span class="meta hidden sm:inline">{{ issue }}</span>
+        <span class="meta">CN · EN</span>
+      </div>
     </div>
 
-    <!-- Mobile Menu -->
-    <Transition
-      enter-active-class="transition-all duration-200"
-      enter-from-class="opacity-0 -translate-y-2"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transition-all duration-150"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 -translate-y-2"
-    >
-      <div v-if="mobileMenuOpen" class="border-t border-brand-border bg-brand-surface/50 px-4 pb-6 backdrop-blur-xl md:hidden">
-        <nav class="flex flex-col gap-4 pt-6">
+    <!-- Main row -->
+    <div class="border-b border-[var(--ink)]">
+      <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-5">
+        <NuxtLink to="/" class="font-display text-3xl font-medium leading-none tracking-tight md:text-4xl">
+          {{ appConfig.site.name }}<span class="italic font-normal">.</span>
+        </NuxtLink>
+
+        <nav class="hidden items-center gap-7 md:flex">
           <NuxtLink
-            to="/learn"
-            class="text-base font-semibold text-brand-muted transition-colors hover:text-brand-text"
-            active-class="text-brand-primary"
-            @click="mobileMenuOpen = false"
+            v-for="item in nav"
+            :key="item.to"
+            :to="item.to"
+            class="relative text-sm font-medium text-[var(--ink-soft)] transition-colors hover:text-[var(--ink)]"
+            active-class="!text-[var(--cobalt)]"
           >
-            {{ t('nav.learn') }}
-          </NuxtLink>
-          <NuxtLink
-            to="/projects"
-            class="text-base font-semibold text-brand-muted transition-colors hover:text-brand-text"
-            active-class="text-brand-primary"
-            @click="mobileMenuOpen = false"
-          >
-            {{ t('nav.projects') }}
-          </NuxtLink>
-          <NuxtLink
-            to="/blog"
-            class="text-base font-semibold text-brand-muted transition-colors hover:text-brand-text"
-            active-class="text-brand-primary"
-            @click="mobileMenuOpen = false"
-          >
-            {{ t('nav.blog') }}
-          </NuxtLink>
-          <NuxtLink
-            to="/about"
-            class="text-base font-semibold text-brand-muted transition-colors hover:text-brand-text"
-            active-class="text-brand-primary"
-            @click="mobileMenuOpen = false"
-          >
-            {{ t('nav.about') }}
+            {{ item.label }}
           </NuxtLink>
 
-          <!-- Mobile Language Switcher -->
-          <div class="flex gap-2 pt-2">
+          <span class="h-4 w-px bg-[var(--rule)]"></span>
+
+          <button
+            v-for="loc in availableLocales"
+            :key="loc.code"
+            class="text-xs font-semibold uppercase tracking-widest text-[var(--ink-soft)] hover:text-[var(--cobalt)]"
+            :title="`Switch to ${loc.name}`"
+            @click="switchLocale(loc.code)"
+          >
+            {{ loc.code === 'zh-CN' ? '中文' : 'EN' }}
+          </button>
+
+          <NuxtLink to="/newsletter" class="btn-ink text-sm">
+            {{ t('nav.subscribe') }}
+          </NuxtLink>
+        </nav>
+
+        <button
+          class="border border-[var(--ink)] px-3 py-1.5 text-sm font-semibold md:hidden"
+          :aria-label="t('common.menu')"
+          @click="mobileMenuOpen = !mobileMenuOpen"
+        >
+          {{ mobileMenuOpen ? '×' : 'Menu' }}
+        </button>
+      </div>
+    </div>
+
+    <Transition
+      enter-active-class="transition-opacity duration-150"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div v-if="mobileMenuOpen" class="border-b border-[var(--ink)] bg-[var(--paper)] px-6 pb-8 pt-2 md:hidden">
+        <nav class="flex flex-col divide-y divide-[var(--rule)]">
+          <NuxtLink
+            v-for="item in nav"
+            :key="item.to"
+            :to="item.to"
+            class="py-4 font-display text-3xl"
+            active-class="!text-[var(--cobalt)]"
+            @click="mobileMenuOpen = false"
+          >
+            {{ item.label }}
+          </NuxtLink>
+
+          <div class="flex gap-4 py-4">
             <button
               v-for="loc in availableLocales"
               :key="loc.code"
+              class="text-xs font-semibold uppercase tracking-widest"
               @click="switchLocale(loc.code)"
-              class="flex-1 rounded-lg bg-brand-surface px-4 py-2 text-sm font-medium text-brand-muted transition-colors hover:bg-brand-primary hover:text-white"
             >
               {{ loc.name }}
             </button>
           </div>
 
-          <NuxtLink
-            to="/newsletter"
-            class="btn-primary mt-2 px-5 py-3 text-center text-sm"
-            @click="mobileMenuOpen = false"
-          >
-            <Icon name="heroicons:envelope" class="h-4 w-4" />
+          <NuxtLink to="/newsletter" class="btn-ink mt-2 self-start" @click="mobileMenuOpen = false">
             {{ t('nav.subscribe') }}
           </NuxtLink>
         </nav>

@@ -4,12 +4,9 @@ const { formatDate } = useFormatDate()
 
 const route = useRoute()
 const { data: project, error } = await useAsyncData(route.path, () =>
-  queryCollection('projects').path(route.path).first()
+  queryCollection('projects').path(route.path).first(),
 )
-
-if (error.value || !project.value) {
-  throw createError({ statusCode: 404, message: t('error.notFound') })
-}
+if (error.value || !project.value) throw createError({ statusCode: 404, message: t('error.notFound') })
 
 useSeoMeta({
   title: `${project.value.title} — Turing`,
@@ -19,128 +16,102 @@ useSeoMeta({
   ogType: 'website',
 })
 
+const heroImg = useArticleImage(route.path, 'hero')
+const sideImg = useArticleImage(route.path, 'portrait', 1)
+
 const { data: otherProjects } = await useAsyncData(`other-projects-${route.path}`, async () => {
   const all = await queryCollection('projects').limit(4).all()
-  return all.filter(p => p.path !== project.value.path).slice(0, 3)
+  return all.filter(p => p.path !== project.value!.path).slice(0, 3)
 })
+
+const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 </script>
 
 <template>
-  <article v-if="project" class="min-h-screen">
-    <!-- Header -->
-    <section class="gradient-bg px-4 py-20">
-      <div class="mx-auto max-w-4xl">
-        <nav class="flex items-center gap-2 text-sm text-brand-subtle">
-          <NuxtLink to="/" class="hover:text-brand-primary">{{ t('nav.home') }}</NuxtLink>
-          <Icon name="heroicons:chevron-right" class="h-4 w-4" />
-          <NuxtLink to="/projects" class="hover:text-brand-primary">{{ t('projects.title') }}</NuxtLink>
+  <article v-if="project">
+    <header class="border-b border-[var(--rule)]">
+      <div class="mx-auto max-w-[1100px] px-6 pt-12 pb-12">
+        <nav class="meta mb-8 flex items-center gap-2">
+          <NuxtLink to="/" class="hover:text-[var(--cobalt)]">Home</NuxtLink>
+          <span>/</span>
+          <NuxtLink to="/projects" class="hover:text-[var(--cobalt)]">{{ t('projects.title') }}</NuxtLink>
         </nav>
+        <div class="mb-5 flex flex-wrap items-baseline gap-4">
+          <span class="pill" :class="projectStatusClass(project.status)">{{ projectStatusLabel(project.status) }}</span>
+          <span v-if="project.date" class="meta">{{ formatDate(project.date) }}</span>
+        </div>
+        <h1 class="mag-1">{{ project.title }}</h1>
+        <p class="dek mt-8">{{ project.description }}</p>
 
-        <div class="mt-8">
-          <div class="flex flex-wrap items-center gap-3">
-            <span
-              class="rounded-full px-3 py-1 text-xs font-bold uppercase"
-              :class="{
-                'bg-brand-primary/10 text-brand-primary': project.status === 'active',
-                'bg-brand-secondary/10 text-brand-secondary': project.status === 'wip',
-                'bg-brand-subtle/10 text-brand-subtle': project.status === 'archived',
-              }"
-            >
-              {{ t(`projects.status.${project.status}`) }}
-            </span>
-            <span v-if="project.date" class="text-sm text-brand-subtle">
-              {{ formatDate(project.date) }}
-            </span>
-          </div>
+        <div v-if="project.tags?.length" class="mt-6 flex flex-wrap gap-x-4">
+          <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
+        </div>
 
-          <h1 class="mt-6 text-4xl font-bold leading-tight md:text-5xl">
-            {{ project.title }}
-          </h1>
-          <p class="mt-4 text-xl text-brand-muted">
-            {{ project.description }}
-          </p>
-
-          <div class="mt-6 flex flex-wrap gap-4">
-            <a
-              v-if="project.github"
-              :href="project.github"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-primary"
-            >
-              <Icon name="heroicons:code-bracket" class="h-5 w-5" />
-              {{ t('common.viewSource') }}
-            </a>
-          </div>
-
-          <div v-if="project.tags?.length" class="mt-6 flex flex-wrap gap-2">
-            <span
-              v-for="tag in project.tags"
-              :key="tag"
-              class="rounded-full bg-brand-surface px-3 py-1 text-sm text-brand-muted"
-            >
-              #{{ tag }}
-            </span>
-          </div>
+        <div v-if="project.github" class="mt-8">
+          <a :href="project.github" target="_blank" rel="noopener noreferrer" class="btn-ink">
+            {{ t('common.viewSource') }} ↗
+          </a>
         </div>
       </div>
-    </section>
+    </header>
 
-    <!-- Content -->
-    <section class="px-4 py-12">
-      <div class="mx-auto max-w-4xl">
-        <div class="prose prose-lg max-w-none">
+    <figure class="figure">
+      <div class="ar-cinema overflow-hidden">
+        <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
+      </div>
+    </figure>
+
+    <section class="mx-auto max-w-[1100px] px-6 py-16">
+      <div class="grid gap-x-10 md:grid-cols-12">
+        <div class="prose md:col-span-8 max-w-none">
           <ContentRenderer :value="project" />
         </div>
-      </div>
-    </section>
-
-    <!-- Other Projects -->
-    <section v-if="otherProjects?.length" class="px-4 py-12">
-      <div class="mx-auto max-w-4xl">
-        <div class="mb-8 border-t border-brand-border pt-8">
-          <h2 class="text-3xl font-bold">{{ t('projects.otherProjects') }}</h2>
-        </div>
-        <div class="grid gap-6 md:grid-cols-3">
-          <NuxtLink
-            v-for="other in otherProjects"
-            :key="other.path"
-            :to="other.path"
-            class="card group p-6"
-          >
-            <div class="mb-3">
-              <span
-                class="rounded-full px-3 py-1 text-xs font-bold uppercase"
-                :class="{
-                  'bg-brand-primary/10 text-brand-primary': other.status === 'active',
-                  'bg-brand-secondary/10 text-brand-secondary': other.status === 'wip',
-                  'bg-brand-subtle/10 text-brand-subtle': other.status === 'archived',
-                }"
-              >
-                {{ t(`projects.status.${other.status}`) }}
-              </span>
+        <aside class="mt-12 md:col-span-4 md:mt-0">
+          <figure class="figure md:sticky md:top-12">
+            <div class="ar-portrait overflow-hidden">
+              <img :src="sideImg.src" :alt="sideImg.alt" loading="lazy">
             </div>
-            <h3 class="font-bold leading-tight group-hover:text-brand-primary">
-              {{ other.title }}
-            </h3>
-            <p class="mt-2 line-clamp-2 text-sm text-brand-muted">
-              {{ other.description }}
-            </p>
-          </NuxtLink>
-        </div>
+            <figcaption class="figure__caption">
+              <span class="figure__caption-num">Fig. 02</span>
+              <span>An accompanying image.</span>
+            </figcaption>
+          </figure>
+        </aside>
       </div>
     </section>
 
-    <!-- Back to Projects -->
-    <section class="px-4 py-8">
-      <div class="mx-auto max-w-4xl border-t border-brand-border pt-8">
-        <NuxtLink
-          to="/projects"
-          class="group inline-flex items-center gap-2 text-brand-primary transition-all hover:gap-3"
-        >
-          <Icon name="heroicons:arrow-left" class="h-5 w-5" />
-          <span class="font-semibold">{{ t('common.backTo') }} {{ t('projects.title') }}</span>
-        </NuxtLink>
+    <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
+      <div class="mx-auto max-w-[1320px] px-6 py-20">
+        <NuxtLink to="/projects" class="link-more mb-10 inline-flex">← {{ t('common.backTo') }} {{ t('projects.title') }}</NuxtLink>
+
+        <div v-if="otherProjects?.length" class="mt-10">
+          <div class="section-head mb-10">
+            <div>
+              <p class="kicker kicker--cobalt mb-2">Elsewhere in the ledger</p>
+              <h2 class="mag-2">{{ t('projects.otherProjects') }}</h2>
+            </div>
+          </div>
+
+          <div class="grid gap-x-8 gap-y-12 md:grid-cols-3">
+            <NuxtLink
+              v-for="other in otherProjects"
+              :key="other.path"
+              :to="other.path"
+              class="tile group"
+            >
+              <figure class="figure figure--zoom">
+                <div class="ar-card overflow-hidden">
+                  <img :src="useArticleImage(other.path, 'card').src" :alt="useArticleImage(other.path, 'card').alt" loading="lazy">
+                </div>
+              </figure>
+              <div>
+                <div class="mb-2"><span class="pill" :class="projectStatusClass(other.status)">{{ projectStatusLabel(other.status) }}</span></div>
+                <h3 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ other.title }}</h3>
+                <p class="tile__dek mt-2 line-clamp-2">{{ other.description }}</p>
+              </div>
+            </NuxtLink>
+          </div>
+        </div>
       </div>
     </section>
   </article>

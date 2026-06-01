@@ -1,3 +1,5 @@
+import process from 'node:process'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
@@ -18,7 +20,6 @@ export default defineNuxtConfig({
       { code: 'en-US', iso: 'en-US', file: 'en-US.json', name: 'English' },
     ],
     defaultLocale: 'zh-CN',
-    lazy: true,
     langDir: 'locales',
     strategy: 'prefix_except_default',
     detectBrowserLanguage: {

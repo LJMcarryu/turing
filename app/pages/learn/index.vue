@@ -1,26 +1,20 @@
 <script setup lang="ts">
 const { t } = useI18n()
 
-useSeoMeta({
-  title: `${t('learn.title')} — Turing`,
-  description: t('learn.subtitle'),
-})
+useSeoMeta({ title: `${t('learn.title')} — Turing`, description: t('learn.subtitle') })
 
 const levelFilter = ref('')
 
 const { data: articles, error } = await useAsyncData('learn-all', () =>
-  queryCollection('learn').order('date', 'DESC').all()
+  queryCollection('learn').order('date', 'DESC').all(),
 )
-
-if (error.value) {
-  throw createError({ statusCode: 500, message: t('error.loadFailed') })
-}
+if (error.value) throw createError({ statusCode: 500, message: t('error.loadFailed') })
 
 const categories = [
-  { value: 'claude-code', icon: 'heroicons:command-line', color: 'primary' },
-  { value: 'prompt-engineering', icon: 'heroicons:chat-bubble-left-right', color: 'accent' },
-  { value: 'agent-development', icon: 'heroicons:cpu-chip', color: 'secondary' },
-  { value: 'mcp', icon: 'heroicons:puzzle-piece', color: 'primary' },
+  { value: 'claude-code' },
+  { value: 'prompt-engineering' },
+  { value: 'agent-development' },
+  { value: 'mcp' },
 ]
 
 const levels = computed(() => [
@@ -33,109 +27,104 @@ const levels = computed(() => [
 const filteredArticles = computed(() => {
   if (!articles.value) return []
   if (!levelFilter.value) return articles.value
-  return articles.value.filter((a) => a.level === levelFilter.value)
+  return articles.value.filter(a => a.level === levelFilter.value)
 })
 </script>
 
 <template>
-  <div class="gradient-bg min-h-screen">
-    <!-- Header -->
-    <section class="px-4 py-20">
-      <div class="mx-auto max-w-6xl">
-        <div class="text-center">
-          <h1 class="text-5xl font-bold md:text-6xl">
-            <span class="text-gradient">{{ t('learn.title') }}</span>
-          </h1>
-          <p class="mx-auto mt-4 max-w-2xl text-xl text-brand-muted">
-            {{ t('learn.subtitle') }}
-          </p>
+  <article>
+    <header class="border-b border-[var(--ink)]">
+      <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-12">
+        <div class="mb-6 flex flex-wrap items-baseline gap-4 border-b border-[var(--rule)] pb-3">
+          <span class="meta text-[var(--cobalt)]">№ 01 — Field Manual</span>
+          <span class="meta">{{ articles?.length ?? 0 }} tutorials</span>
+        </div>
+        <p class="kicker kicker--cobalt mb-5">A working manual</p>
+        <h1 class="mag-1">{{ t('learn.title') }}<span class="mag-italic text-[var(--cobalt)]">.</span></h1>
+        <p class="dek mt-6 max-w-[44ch]">{{ t('learn.subtitle') }}</p>
+      </div>
+    </header>
+
+    <!-- Departments as image-led tiles -->
+    <section class="mx-auto max-w-[1320px] px-6 py-16">
+      <div class="section-head mb-12">
+        <div>
+          <p class="kicker kicker--cobalt mb-2">Departments</p>
+          <h2 class="mag-2">{{ t('learn.learningPath') }}</h2>
         </div>
       </div>
-    </section>
 
-    <!-- Categories -->
-    <section class="px-4 py-12">
-      <div class="mx-auto max-w-6xl">
-        <h2 class="mb-8 text-3xl font-bold">{{ t('learn.learningPath') }}</h2>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <NuxtLink
-            v-for="(cat, index) in categories"
-            :key="cat.value"
-            :to="`/learn/${cat.value}`"
-            class="card group p-6 text-center"
-            :style="{ animationDelay: `${index * 100}ms` }"
-          >
-            <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-surface">
-              <Icon :name="cat.icon" class="h-8 w-8 text-brand-primary" />
+      <div class="grid gap-x-8 gap-y-10 md:grid-cols-4">
+        <NuxtLink
+          v-for="(cat, i) in categories"
+          :key="cat.value"
+          :to="`/learn/${cat.value}`"
+          class="tile group"
+        >
+          <figure class="figure figure--zoom">
+            <div class="ar-square overflow-hidden">
+              <img :src="useArticleImage(cat.value, 'square').src" :alt="useArticleImage(cat.value, 'square').alt" loading="lazy">
             </div>
-            <h3 class="text-lg font-bold group-hover:text-brand-primary">
-              {{ t(`learn.categories.${cat.value}`) }}
-            </h3>
-          </NuxtLink>
-        </div>
+          </figure>
+          <div>
+            <span class="meta text-[var(--cobalt)]">{{ String(i + 1).padStart(2, '0') }}</span>
+            <h3 class="mag-4 mt-1 transition-colors group-hover:text-[var(--cobalt)]">{{ t(`learn.categories.${cat.value}`) }}</h3>
+          </div>
+        </NuxtLink>
       </div>
     </section>
 
-    <!-- All Tutorials -->
-    <section class="px-4 py-12">
-      <div class="mx-auto max-w-6xl">
-        <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <h2 class="text-3xl font-bold">{{ t('learn.allTutorials') }}</h2>
-          <div class="flex flex-wrap gap-2">
+    <!-- All tutorials, asymmetric magazine grid -->
+    <section class="border-t border-[var(--rule)] bg-[var(--paper-2)]">
+      <div class="mx-auto max-w-[1320px] px-6 py-16">
+        <div class="section-head mb-12">
+          <div>
+            <p class="kicker kicker--cobalt mb-2">Index</p>
+            <h2 class="mag-2">{{ t('learn.allTutorials') }}</h2>
+          </div>
+          <div class="flex flex-wrap items-baseline gap-x-5 gap-y-1">
+            <span class="meta mr-1">Level</span>
             <button
               v-for="level in levels"
               :key="level.value"
+              class="text-sm font-medium transition-colors"
+              :class="levelFilter === level.value ? 'text-[var(--cobalt)] underline underline-offset-4 decoration-1' : 'text-[var(--ink-soft)] hover:text-[var(--ink)]'"
               @click="levelFilter = level.value"
-              :class="[
-                'rounded-full px-4 py-2 text-sm font-semibold transition-all',
-                levelFilter === level.value
-                  ? 'bg-brand-primary text-brand-bg'
-                  : 'bg-brand-surface text-brand-muted hover:bg-brand-card hover:text-brand-text'
-              ]"
             >
               {{ level.label }}
             </button>
           </div>
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div v-if="filteredArticles.length" class="grid gap-x-8 gap-y-14 md:grid-cols-3">
           <NuxtLink
-            v-for="(article, index) in filteredArticles"
+            v-for="article in filteredArticles"
             :key="article.path"
             :to="article.path"
-            class="card group p-6"
-            :style="{ animationDelay: `${index * 50}ms` }"
+            class="tile group"
           >
-            <div class="mb-3 flex items-center justify-between">
-              <span class="rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-bold uppercase text-brand-primary">
-                {{ article.category }}
-              </span>
-              <LevelBadge v-if="article.level" :level="article.level" />
-            </div>
-            <h3 class="text-xl font-bold leading-tight group-hover:text-brand-primary">
-              {{ article.title }}
-            </h3>
-            <p class="mt-3 line-clamp-2 text-sm text-brand-muted">
-              {{ article.description }}
-            </p>
-            <div class="mt-4 flex items-center gap-3 text-xs text-brand-subtle">
-              <span v-if="article.readingTime" class="flex items-center gap-1">
-                <Icon name="heroicons:clock" class="h-4 w-4" />
-                {{ article.readingTime }} {{ t('common.readingTime') }}
-              </span>
-              <span v-if="article.tags?.length" class="flex items-center gap-1">
-                <Icon name="heroicons:tag" class="h-4 w-4" />
-                {{ article.tags.length }} {{ t('common.tags') }}
-              </span>
+            <figure class="figure figure--zoom">
+              <div class="ar-card overflow-hidden">
+                <img :src="useArticleImage(article.path, 'card').src" :alt="useArticleImage(article.path, 'card').alt" loading="lazy">
+              </div>
+            </figure>
+            <div>
+              <div class="mb-2 flex flex-wrap items-baseline gap-3">
+                <span class="meta text-[var(--cobalt)]">{{ article.category }}</span>
+                <LevelBadge v-if="article.level" :level="article.level" />
+              </div>
+              <h3 class="mag-4 transition-colors group-hover:text-[var(--cobalt)]">{{ article.title }}</h3>
+              <p class="tile__dek mt-2 line-clamp-2">{{ article.description }}</p>
+              <p v-if="article.readingTime" class="meta mt-3">{{ article.readingTime }} {{ t('common.min') }}</p>
             </div>
           </NuxtLink>
         </div>
 
-        <div v-if="filteredArticles.length === 0" class="py-20 text-center">
-          <Icon name="heroicons:academic-cap" class="mx-auto h-16 w-16 text-brand-subtle" />
-          <p class="mt-4 text-brand-muted">{{ t('learn.noTutorialsLevel') }}</p>
+        <div v-else class="py-20 text-center">
+          <p class="kicker mb-3">No entries</p>
+          <p class="dek">{{ t('learn.noTutorialsLevel') }}</p>
         </div>
       </div>
     </section>
-  </div>
+  </article>
 </template>

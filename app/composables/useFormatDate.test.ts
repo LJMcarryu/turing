@@ -1,13 +1,9 @@
-import { describe, it, expect } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { formatDateValue } from './useFormatDate'
 
-describe('Date Formatting Utility', () => {
+describe('date formatting utility', () => {
   it('formats date to locale string', () => {
-    const date = new Date('2026-03-29')
-    const formatted = date.toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+    const formatted = formatDateValue('2026-03-29', 'zh-CN')
 
     expect(formatted).toContain('2026')
     expect(formatted).toContain('3')
@@ -15,12 +11,7 @@ describe('Date Formatting Utility', () => {
   })
 
   it('formats date to English locale', () => {
-    const date = new Date('2026-03-29')
-    const formatted = date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    })
+    const formatted = formatDateValue('2026-03-29', 'en-US')
 
     expect(formatted).toContain('2026')
     expect(formatted).toContain('March')
@@ -28,9 +19,10 @@ describe('Date Formatting Utility', () => {
   })
 
   it('handles invalid dates', () => {
-    const date = new Date('invalid')
-    const formatted = date.toLocaleDateString('zh-CN')
+    expect(formatDateValue('invalid', 'zh-CN')).toBe('Invalid Date')
+  })
 
-    expect(formatted).toBe('Invalid Date')
+  it('keeps date-only values on the requested calendar day', () => {
+    expect(formatDateValue('2026-03-01', 'en-US')).toContain('March 1')
   })
 })

@@ -75,6 +75,18 @@ const faqs = [
 
 const openFaq = ref(-1)
 
+interface SetupStep {
+  title: string
+  desc?: string
+  code?: string
+}
+
+const setupSteps: SetupStep[] = [
+  { title: '获取 API Key', desc: '访问 console.anthropic.com 注册并创建密钥' },
+  { title: '配置密钥', code: 'claude config set apiKey YOUR_API_KEY_HERE' },
+  { title: '验证安装', code: 'claude --version' },
+]
+
 const bugSteps = [
   { title: '运行测试', code: '> npm test\n✗ 3 tests failed in src/utils/validator.test.ts' },
   { title: 'Claude 分析', code: '> 帮我定位问题\n⚡ Found issue in src/utils/validator.ts:42\n  — regex missing Unicode support' },
@@ -225,11 +237,7 @@ pnpm add -g @anthropic-ai/claude-code</code></pre>
 
       <!-- Steps -->
       <div class="mt-10 space-y-0">
-        <div v-for="(step, i) in [
-          { title: '获取 API Key', desc: '访问 console.anthropic.com 注册并创建密钥' },
-          { title: '配置密钥', code: 'claude config set apiKey YOUR_API_KEY_HERE' },
-          { title: '验证安装', code: 'claude --version' },
-        ]" :key="i" class="flex gap-4">
+        <div v-for="(step, i) in setupSteps" :key="step.title" class="flex gap-4">
           <div class="flex flex-col items-center">
             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-primary to-brand-accent text-sm font-bold text-white">
               {{ i + 1 }}
