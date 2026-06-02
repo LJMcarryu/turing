@@ -13,8 +13,8 @@ useSeoMeta({
   ogType: 'website',
 })
 
-const heroImg = useArticleImage(route.path, 'hero')
-const sideImg = useArticleImage(route.path, 'portrait', 1)
+const heroImg = useArticleImageFromEntry(project.value, 'hero')
+const sideImg = useArticleImageFromEntry(project.value, 'portrait', 1)
 
 const { data: otherProjects } = useOtherProjects(project)
 

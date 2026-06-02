@@ -17,10 +17,8 @@ useSeoMeta({
 })
 
 const categoryName = computed(() => t(`learn.categories.${article.value!.category}`) || article.value!.category)
-const heroImg = computed(() => article.value?.cover
-  ? { src: article.value.cover, alt: article.value.title }
-  : useArticleImage(route.path, 'hero'))
-const sideImg = computed(() => useArticleImage(route.path, 'portrait', 1))
+const heroImg = computed(() => useArticleImageFromEntry(article.value, 'hero'))
+const sideImg = computed(() => useArticleImageFromEntry(article.value, 'portrait', 1))
 
 const { data: relatedArticles } = useRelatedArticles(article)
 </script>

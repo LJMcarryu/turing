@@ -18,10 +18,8 @@ useSeoMeta({
   articleTag: post.value.tags,
 })
 
-const heroImg = computed(() => post.value?.cover
-  ? { src: post.value.cover, alt: post.value.title }
-  : useArticleImage(route.path, 'hero'))
-const sideImg = computed(() => useArticleImage(route.path, 'portrait', 1))
+const heroImg = computed(() => useArticleImageFromEntry(post.value, 'hero'))
+const sideImg = computed(() => useArticleImageFromEntry(post.value, 'portrait', 1))
 
 const { data: relatedPosts } = useRelatedPosts(post)
 </script>
