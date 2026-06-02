@@ -3,10 +3,7 @@ const { t } = useI18n()
 const { formatDate } = useFormatDate()
 
 const route = useRoute()
-const { data: project, error } = await useAsyncData(route.path, () =>
-  queryCollection('projects').path(route.path).first(),
-)
-if (error.value || !project.value) throw createError({ statusCode: 404, message: t('error.notFound') })
+const project = await getProject(route.path)
 
 useSeoMeta({
   title: `${project.value.title} — Turing`,
@@ -16,13 +13,10 @@ useSeoMeta({
   ogType: 'website',
 })
 
-const heroImg = useArticleImage(route.path, 'hero')
-const sideImg = useArticleImage(route.path, 'portrait', 1)
+const heroImg = useArticleImageFromEntry(project.value, 'hero')
+const sideImg = useArticleImageFromEntry(project.value, 'portrait', 1)
 
-const { data: otherProjects } = await useAsyncData(`other-projects-${route.path}`, async () => {
-  const all = await queryCollection('projects').limit(4).all()
-  return all.filter(p => p.path !== project.value!.path).slice(0, 3)
-})
+const { data: otherProjects } = useOtherProjects(project)
 
 const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 </script>

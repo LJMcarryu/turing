@@ -45,26 +45,78 @@ function seed(slug: string, offset = 0): string {
   return `${base}-${offset}`
 }
 
-export function useArticleImage(slug: string, variant: ImgVariant = 'card', offset = 0) {
+// 内容条目里与配图相关的字段（frontmatter）。结构上兼容 @nuxt/content 的集合条目。
+export interface ArticleImageEntry {
+  path?: string
+  cover?: string
+  credit?: string
+  creditUrl?: string
+  alt?: string
+  title?: string
+}
+
+export interface ResolvedImage {
+  src: string
+  src2x: string
+  alt: string
+  credit: string
+  creditUrl: string
+  seed: string
+}
+
+function tableCredit(slug: string): { credit: string, creditUrl: string } | undefined {
+  const photo = UNSPLASH[slug]
+  if (!photo)
+    return undefined
+  return {
+    credit: `Photo by ${photo.by} on Unsplash`,
+    creditUrl: `https://unsplash.com/@${photo.user}?utm_source=turing&utm_medium=referral`,
+  }
+}
+
+// 单一图片解析策略：frontmatter(cover/credit/alt) > 本地 Unsplash 表(按 path) > picsum 兜底。
+// offset>0 视为副图，始终走 picsum（与历史行为一致）。
+export function resolveArticleImage(slug: string, variant: ImgVariant = 'card', offset = 0, entry?: ArticleImageEntry): ResolvedImage {
   const { w, h } = DIMS[variant]
-  const photo = offset === 0 ? UNSPLASH[slug] : undefined
-  if (photo) {
+  const table = offset === 0 ? tableCredit(slug) : undefined
+  const alt = entry?.alt ?? entry?.title ?? ''
+
+  // 1) frontmatter 封面优先
+  if (offset === 0 && entry?.cover) {
     return {
-      src: photo.f,
-      src2x: photo.f,
-      alt: '',
-      credit: `Photo by ${photo.by} on Unsplash`,
-      creditUrl: `https://unsplash.com/@${photo.user}?utm_source=turing&utm_medium=referral`,
+      src: entry.cover,
+      src2x: entry.cover,
+      alt,
+      credit: entry.credit ?? table?.credit ?? '',
+      creditUrl: entry.creditUrl ?? table?.creditUrl ?? '',
       seed: slug,
     }
   }
+
+  // 2) 本地自托管 Unsplash 表
+  const photo = offset === 0 ? UNSPLASH[slug] : undefined
+  if (photo && table) {
+    return { src: photo.f, src2x: photo.f, alt, credit: table.credit, creditUrl: table.creditUrl, seed: slug }
+  }
+
+  // 3) picsum 兜底
   const s = seed(slug, offset)
   return {
     src: `https://picsum.photos/seed/${s}/${w}/${h}`,
     src2x: `https://picsum.photos/seed/${s}/${w * 2}/${h * 2}`,
-    alt: '',
+    alt,
     credit: 'picsum.photos',
     creditUrl: '',
     seed: s,
   }
+}
+
+// 种子/非内容图（首页封面、栏目 hero 等没有内容条目的调用）。
+export function useArticleImage(slug: string, variant: ImgVariant = 'card', offset = 0): ResolvedImage {
+  return resolveArticleImage(slug, variant, offset)
+}
+
+// 内容条目图：frontmatter 优先、按 entry.path 回退到表。
+export function useArticleImageFromEntry(entry: ArticleImageEntry, variant: ImgVariant = 'card', offset = 0): ResolvedImage {
+  return resolveArticleImage(entry.path ?? '', variant, offset, entry)
 }

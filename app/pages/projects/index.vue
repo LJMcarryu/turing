@@ -3,10 +3,7 @@ const { t } = useI18n()
 
 useSeoMeta({ title: `${t('projects.title')} — Turing`, description: t('projects.subtitle') })
 
-const { data: projects, error } = await useAsyncData('projects-all', () =>
-  queryCollection('projects').all(),
-)
-if (error.value) throw createError({ statusCode: 500, message: t('error.loadFailed') })
+const { projects } = await useProjects()
 
 const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 </script>

@@ -7,12 +7,7 @@ watch(() => route.path, () => {
   mobileMenuOpen.value = false
 })
 
-const nav = computed(() => [
-  { to: '/learn', label: t('nav.learn') },
-  { to: '/projects', label: t('nav.projects') },
-  { to: '/blog', label: t('nav.blog') },
-  { to: '/about', label: t('nav.about') },
-])
+const nav = useNavigation()
 
 const issue = computed(() => {
   const now = new Date()

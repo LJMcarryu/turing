@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const appConfig = useAppConfig()
 const { t } = useI18n()
+const nav = useNavigation()
 const year = new Date().getFullYear()
 </script>
 
@@ -26,10 +27,9 @@ const year = new Date().getFullYear()
         <div class="md:col-span-3">
           <p class="kicker mb-3 !text-[var(--paper-dark)]/60">Sections</p>
           <ul class="flex flex-col gap-2">
-            <li><NuxtLink to="/learn" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">{{ t('nav.learn') }}</NuxtLink></li>
-            <li><NuxtLink to="/projects" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">{{ t('nav.projects') }}</NuxtLink></li>
-            <li><NuxtLink to="/blog" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">{{ t('nav.blog') }}</NuxtLink></li>
-            <li><NuxtLink to="/about" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">{{ t('nav.about') }}</NuxtLink></li>
+            <li v-for="item in nav" :key="item.to">
+              <NuxtLink :to="item.to" class="text-[var(--paper-dark)] hover:text-[var(--cobalt-bright)]">{{ item.label }}</NuxtLink>
+            </li>
           </ul>
         </div>
 

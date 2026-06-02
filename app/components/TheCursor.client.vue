@@ -7,8 +7,7 @@ const pos = { x: -100, y: -100 }
 const cur = { x: -100, y: -100 }
 
 onMounted(() => {
-  if (!window.matchMedia('(pointer: fine)').matches) return
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+  if (!useMotionAllowed().allowed) return
   document.documentElement.classList.add('has-cursor')
   const move = (e: MouseEvent) => {
     pos.x = e.clientX

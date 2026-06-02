@@ -1,9 +1,7 @@
 import Lenis from 'lenis'
 
 export default defineNuxtPlugin(() => {
-  const fine = window.matchMedia('(pointer: fine)').matches
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  if (!fine || reduce)
+  if (!useMotionAllowed().allowed)
     return // 移动端/降级走原生滚动
 
   const lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1, smoothWheel: true, syncTouch: false })

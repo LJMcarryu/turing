@@ -4,3 +4,6 @@ node_modules
 dist
 .git
 *.log
+
+# 内容 Markdown 含 MDC 组件语法（::component + --- YAML 块），prettier 会破坏它
+content/**/*.md

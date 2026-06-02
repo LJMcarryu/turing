@@ -1,3 +1,6 @@
+import { applySpec } from '#shared/content/apply'
+import { mergeFeed } from '#shared/content/predicates'
+import { buildBlogSpec, buildLearnSpec } from '#shared/content/spec'
 import { queryCollection } from '@nuxt/content/server'
 import { defineEventHandler, setResponseHeader } from 'h3'
 
@@ -5,17 +8,6 @@ const AMPERSAND_RE = /&/g
 const DOUBLE_QUOTE_RE = /"/g
 const GREATER_THAN_RE = />/g
 const LESS_THAN_RE = /</g
-
-interface FeedItem {
-  title?: string
-  description?: string
-  date?: string
-  path?: string
-}
-
-function hasFeedFields(item: FeedItem): item is Required<FeedItem> {
-  return Boolean(item.title && item.description && item.date && item.path)
-}
 
 function escapeXml(str: string): string {
   return str
@@ -30,13 +22,10 @@ function cdata(str: string): string {
 }
 
 export default defineEventHandler(async (event) => {
-  const learn = await queryCollection(event, 'learn').order('date', 'DESC').limit(20).all()
-  const blog = await queryCollection(event, 'blog').order('date', 'DESC').limit(20).all()
+  const learn = await applySpec(queryCollection(event, 'learn'), buildLearnSpec({ limit: 20 })).all()
+  const blog = await applySpec(queryCollection(event, 'blog'), buildBlogSpec({ limit: 20 })).all()
 
-  const allItems = [...learn, ...blog]
-    .filter(hasFeedFields)
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-    .slice(0, 20)
+  const allItems = mergeFeed([learn, blog], 20)
 
   const config = useRuntimeConfig()
   const siteUrl = (config.public.siteUrl as string) || 'https://jmliu6.com'

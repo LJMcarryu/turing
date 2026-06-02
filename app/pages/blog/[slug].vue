@@ -3,10 +3,7 @@ const { t } = useI18n()
 const { formatDate } = useFormatDate()
 
 const route = useRoute()
-const { data: post } = await useAsyncData(route.path, () =>
-  queryCollection('blog').path(route.path).first(),
-)
-if (!post.value) throw createError({ statusCode: 404, message: t('error.notFound') })
+const post = await getBlogPost(route.path)
 
 useSeoMeta({
   title: `${post.value.title} — Turing`,
@@ -21,18 +18,10 @@ useSeoMeta({
   articleTag: post.value.tags,
 })
 
-const heroImg = computed(() => post.value?.cover
-  ? { src: post.value.cover, alt: post.value.title }
-  : useArticleImage(route.path, 'hero'))
-const sideImg = computed(() => useArticleImage(route.path, 'portrait', 1))
+const heroImg = computed(() => useArticleImageFromEntry(post.value, 'hero'))
+const sideImg = computed(() => useArticleImageFromEntry(post.value, 'portrait', 1))
 
-const { data: relatedPosts } = await useAsyncData(`related-${route.path}`, async () => {
-  if (!post.value?.tags?.length) return []
-  const all = await queryCollection('blog').order('date', 'DESC').limit(20).all()
-  return all
-    .filter(p => p.path !== post.value!.path && p.tags?.some(tag => post.value!.tags?.includes(tag)))
-    .slice(0, 3)
-})
+const { data: relatedPosts } = useRelatedPosts(post)
 </script>
 
 <template>
