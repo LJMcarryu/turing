@@ -4,10 +4,7 @@ const { formatDate } = useFormatDate()
 
 useSeoMeta({ title: `${t('blog.title')} — Turing`, description: t('blog.subtitle') })
 
-const { data: posts, error } = await useAsyncData('blog-all', () =>
-  queryCollection('blog').order('date', 'DESC').all(),
-)
-if (error.value) throw createError({ statusCode: 500, message: t('error.loadFailed') })
+const { posts } = await useBlogPosts()
 
 const allTags = computed(() => {
   const tags = new Set<string>()

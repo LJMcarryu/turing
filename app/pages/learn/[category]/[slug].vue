@@ -3,10 +3,7 @@ const { t } = useI18n()
 const { formatDate } = useFormatDate()
 
 const route = useRoute()
-const { data: article } = await useAsyncData(route.path, () =>
-  queryCollection('learn').path(route.path).first(),
-)
-if (!article.value) throw createError({ statusCode: 404, message: t('error.notFound') })
+const article = await getLearnArticle(route.path)
 
 useSeoMeta({
   title: `${article.value.title} — Turing`,
@@ -25,14 +22,7 @@ const heroImg = computed(() => article.value?.cover
   : useArticleImage(route.path, 'hero'))
 const sideImg = computed(() => useArticleImage(route.path, 'portrait', 1))
 
-const { data: relatedArticles } = await useAsyncData(`related-${route.path}`, async () => {
-  const all = await queryCollection('learn')
-    .where('category', '=', article.value!.category)
-    .order('date', 'DESC')
-    .limit(4)
-    .all()
-  return all.filter(a => a.path !== article.value!.path).slice(0, 3)
-})
+const { data: relatedArticles } = useRelatedArticles(article)
 </script>
 
 <template>

@@ -5,10 +5,7 @@ useSeoMeta({ title: `${t('learn.title')} — Turing`, description: t('learn.subt
 
 const levelFilter = ref('')
 
-const { data: articles, error } = await useAsyncData('learn-all', () =>
-  queryCollection('learn').order('date', 'DESC').all(),
-)
-if (error.value) throw createError({ statusCode: 500, message: t('error.loadFailed') })
+const { articles } = await useLearnArticles()
 
 const categories = [
   { value: 'claude-code' },

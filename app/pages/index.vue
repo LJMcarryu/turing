@@ -23,15 +23,9 @@ useHead({
   bodyAttrs: { 'data-theme': 'noir' },
 })
 
-const { data: featuredLearn } = await useAsyncData('featured-learn', () =>
-  queryCollection('learn').where('featured', '=', true).limit(4).all(),
-)
-const { data: latestBlog } = await useAsyncData('latest-blog', () =>
-  queryCollection('blog').order('date', 'DESC').limit(4).all(),
-)
-const { data: projects } = await useAsyncData('projects', () =>
-  queryCollection('projects').limit(4).all(),
-)
+const { articles: featuredLearn } = await useLearnArticles({ featured: true, limit: 4 })
+const { posts: latestBlog } = await useBlogPosts({ limit: 4 })
+const { projects } = await useProjects({ limit: 4 })
 
 const today = new Date()
 const dateline = today.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
