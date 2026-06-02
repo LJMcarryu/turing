@@ -18,7 +18,7 @@ describe('relatedPredicate', () => {
     expect(p(C)).toBe(false)
   })
   it('entry 无 tags 时 by tags 全 false', () => {
-    expect(relatedPredicate({ path: '/x', tags: [] }, 'tags')(B)).toBe(false)
+    expect(relatedPredicate({ path: '/x', tags: [] as string[] }, 'tags')(B)).toBe(false)
   })
 })
 
