@@ -6,7 +6,7 @@
 export function useScrollReveal() {
   if (import.meta.server)
     return
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const { reducedMotion: reduce } = useMotionAllowed()
 
   onMounted(() => {
     const revealAll = () =>

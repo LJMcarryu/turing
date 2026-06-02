@@ -42,9 +42,7 @@ function loop() {
 }
 
 onMounted(() => {
-  enabled.value
-    = window.matchMedia('(pointer: fine)').matches
-      && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  enabled.value = useMotionAllowed().allowed
   if (!enabled.value) return // 移动/降级：原生横向滑动，无视差
   nextTick(() => {
     measure()

@@ -37,10 +37,7 @@ useScrollReveal()
 const periodEl = ref<HTMLElement | null>(null)
 onMounted(() => {
   if (import.meta.server) return
-  if (
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
-    !window.matchMedia('(pointer: fine)').matches
-  )
+  if (!useMotionAllowed().allowed)
     return
   const arc = document.querySelector<HTMLElement>('.arc')
   if (!arc) return
