@@ -48,6 +48,15 @@ export default defineNuxtConfig({
     experimental: {
       sqliteConnector: 'native',
     },
+    build: {
+      markdown: {
+        highlight: {
+          // 保留 v3 默认主题，仅追加文档需要的代码高亮语言（Objective-C / Ruby / Swift 等）
+          theme: { default: 'material-theme-palenight' },
+          langs: ['objc', 'ruby', 'swift', 'json', 'diff', 'xml', 'c'],
+        },
+      },
+    },
   },
 
   ogImage: {

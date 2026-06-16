@@ -38,6 +38,7 @@ const UNSPLASH: Record<string, { f: string, by: string, user: string }> = {
   "turing-cover": { f: "/images/unsplash/turing-cover.jpg", by: "Pawel Czerwinski", user: "pawel_czerwinski" },
   "agent-development": { f: "/images/unsplash/agent-development.jpg", by: "Possessed Photography", user: "possessedphotography" },
   "/projects/context-lens": { f: "/images/unsplash/projects-context-lens.jpg", by: "Ross Sneddon", user: "rosssneddon" },
+  "/projects/iflyadlib-ios": { f: "/images/unsplash/projects-iflyadlib-ios.jpg", by: "William Hook", user: "williamtm" },
 }
 
 function seed(slug: string, offset = 0): string {

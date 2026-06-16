@@ -5,16 +5,16 @@ const { formatDate } = useFormatDate()
 const route = useRoute()
 const project = await getProject(route.path)
 
+const heroImg = useArticleImageFromEntry(project.value, 'hero')
+
 useSeoMeta({
   title: `${project.value.title} — Turing`,
   description: project.value.description,
   ogTitle: project.value.title,
   ogDescription: project.value.description,
+  ogImage: heroImg.src,
   ogType: 'website',
 })
-
-const heroImg = useArticleImageFromEntry(project.value, 'hero')
-const sideImg = useArticleImageFromEntry(project.value, 'portrait', 1)
 
 const { data: otherProjects } = useOtherProjects(project)
 
@@ -24,7 +24,7 @@ const { projectStatusClass, projectStatusLabel } = useProjectStatus()
 <template>
   <article v-if="project">
     <header class="border-b border-[var(--rule)]">
-      <div class="mx-auto max-w-[1100px] px-6 pt-12 pb-12">
+      <div class="mx-auto max-w-[1200px] px-6 pt-12 pb-12">
         <nav class="meta mb-8 flex items-center gap-2">
           <NuxtLink to="/" class="hover:text-[var(--cobalt)]">Home</NuxtLink>
           <span>/</span>
@@ -53,24 +53,24 @@ const { projectStatusClass, projectStatusLabel } = useProjectStatus()
       <div class="ar-cinema overflow-hidden">
         <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
       </div>
+      <figcaption class="mx-auto max-w-[1200px] px-6">
+        <div class="figure__caption">
+          <span class="figure__caption-num">Fig. 01</span>
+          <a
+            v-if="heroImg.creditUrl"
+            :href="heroImg.creditUrl"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            class="hover:text-[var(--cobalt)]"
+          >{{ heroImg.credit }}</a>
+          <span v-else>{{ project.title }}</span>
+        </div>
+      </figcaption>
     </figure>
 
-    <section class="mx-auto max-w-[1100px] px-6 py-16">
-      <div class="grid gap-x-10 md:grid-cols-12">
-        <div class="prose md:col-span-8 max-w-none">
-          <ContentRenderer :value="project" />
-        </div>
-        <aside class="mt-12 md:col-span-4 md:mt-0">
-          <figure class="figure md:sticky md:top-12">
-            <div class="ar-portrait overflow-hidden">
-              <img :src="sideImg.src" :alt="sideImg.alt" loading="lazy">
-            </div>
-            <figcaption class="figure__caption">
-              <span class="figure__caption-num">Fig. 02</span>
-              <span>An accompanying image.</span>
-            </figcaption>
-          </figure>
-        </aside>
+    <section class="mx-auto max-w-[1200px] px-6 py-16">
+      <div class="prose max-w-none">
+        <ContentRenderer :value="project" />
       </div>
     </section>
 

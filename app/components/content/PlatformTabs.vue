@@ -36,7 +36,7 @@ async function copy() {
 </button>
     </div>
     <div v-if="current" class="flex items-center justify-between gap-4 px-5 py-4">
-      <code class="overflow-x-auto font-mono text-sm text-[var(--ink)]">{{ current.command }}</code>
+      <code class="min-w-0 flex-1 overflow-x-auto whitespace-pre font-mono text-sm text-[var(--ink)]">{{ current.command }}</code>
       <button
         type="button"
         class="machine shrink-0 text-xs uppercase tracking-wider text-[var(--cobalt)] transition-opacity hover:opacity-70"

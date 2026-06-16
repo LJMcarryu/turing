@@ -5,21 +5,20 @@ const { formatDate } = useFormatDate()
 const route = useRoute()
 const post = await getBlogPost(route.path)
 
+const heroImg = computed(() => useArticleImageFromEntry(post.value, 'hero'))
+
 useSeoMeta({
   title: `${post.value.title} — Turing`,
   description: post.value.description,
   ogTitle: post.value.title,
   ogDescription: post.value.description,
-  ogImage: post.value.cover,
+  ogImage: post.value.cover || heroImg.value.src,
   ogType: 'article',
   articlePublishedTime: post.value.date,
   articleModifiedTime: post.value.updated || post.value.date,
   articleAuthor: ['Jimmy Liu'],
   articleTag: post.value.tags,
 })
-
-const heroImg = computed(() => useArticleImageFromEntry(post.value, 'hero'))
-const sideImg = computed(() => useArticleImageFromEntry(post.value, 'portrait', 1))
 
 const { data: relatedPosts } = useRelatedPosts(post)
 </script>
@@ -28,7 +27,7 @@ const { data: relatedPosts } = useRelatedPosts(post)
   <article v-if="post">
     <!-- Header text on paper, hero image follows -->
     <header class="border-b border-[var(--rule)]">
-      <div class="mx-auto max-w-[1100px] px-6 pt-12 pb-12">
+      <div class="mx-auto max-w-[1200px] px-6 pt-12 pb-12">
         <nav class="meta mb-8 flex items-center gap-2">
           <NuxtLink to="/" class="hover:text-[var(--cobalt)]">Home</NuxtLink>
           <span>/</span>
@@ -56,31 +55,25 @@ const { data: relatedPosts } = useRelatedPosts(post)
       <div class="ar-cinema overflow-hidden">
         <img :src="heroImg.src" :alt="heroImg.alt" loading="eager">
       </div>
-      <figcaption class="mx-auto max-w-[1100px] px-6">
+      <figcaption class="mx-auto max-w-[1200px] px-6">
         <div class="figure__caption">
           <span class="figure__caption-num">Fig. 01</span>
-          <span>Opening plate.</span>
+          <a
+            v-if="heroImg.creditUrl"
+            :href="heroImg.creditUrl"
+            target="_blank"
+            rel="noopener noreferrer nofollow"
+            class="hover:text-[var(--cobalt)]"
+          >{{ heroImg.credit }}</a>
+          <span v-else>Opening plate.</span>
         </div>
       </figcaption>
     </figure>
 
-    <!-- Body with floating sidebar image -->
-    <section class="mx-auto max-w-[1100px] px-6 py-16">
-      <div class="grid gap-x-10 md:grid-cols-12">
-        <div class="prose md:col-span-8 max-w-none">
-          <ContentRenderer :value="post" />
-        </div>
-        <aside class="mt-12 md:col-span-4 md:mt-0">
-          <figure class="figure md:sticky md:top-12">
-            <div class="ar-portrait overflow-hidden">
-              <img :src="sideImg.src" :alt="sideImg.alt" loading="lazy">
-            </div>
-            <figcaption class="figure__caption">
-              <span class="figure__caption-num">Fig. 02</span>
-              <span>An accompanying image.</span>
-            </figcaption>
-          </figure>
-        </aside>
+    <!-- Body — readable column with wide-block breakout -->
+    <section class="mx-auto max-w-[1200px] px-6 py-16">
+      <div class="prose max-w-none">
+        <ContentRenderer :value="post" />
       </div>
     </section>
 
