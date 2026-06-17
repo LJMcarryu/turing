@@ -21,6 +21,10 @@ useSeoMeta({
 })
 
 const { data: relatedPosts } = useRelatedPosts(post)
+
+// 目录：取 @nuxt/content 的 body.toc（SSR 友好）；章节数 ≥3 才启用「正文 + 右侧 TOC」两列版式
+const tocLinks = computed(() => getTocLinks(post.value))
+const hasToc = computed(() => tocCount(tocLinks.value) >= 3)
 </script>
 
 <template>
@@ -70,9 +74,20 @@ const { data: relatedPosts } = useRelatedPosts(post)
       </figcaption>
     </figure>
 
-    <!-- Body — readable column with wide-block breakout -->
+    <!-- Body — readable column with optional sticky TOC -->
     <section class="mx-auto max-w-[1200px] px-6 py-16">
-      <div class="prose max-w-none">
+      <div v-if="hasToc" class="article-layout">
+        <div class="article-main">
+          <ArticleToc :links="tocLinks" variant="inline" class="lg:hidden" />
+          <div class="prose max-w-none">
+            <ContentRenderer :value="post" />
+          </div>
+        </div>
+        <aside class="hidden lg:block">
+          <ArticleToc :links="tocLinks" variant="sticky" />
+        </aside>
+      </div>
+      <div v-else class="prose max-w-none">
         <ContentRenderer :value="post" />
       </div>
     </section>

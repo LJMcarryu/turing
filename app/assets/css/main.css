@@ -725,7 +725,8 @@ img { display: block; max-width: 100%; height: auto; }
   --code-surface: #292d3e;
   --code-ink: #c5cce6;
   --code-border: #383e57;
-  /* 阅读列与宽块列：正文文本回到舒适行宽，表格/代码/MDC 宽块独立放宽，二者同轴居中 */
+  /* 阅读列与宽块列：默认居中（blog/learn 等无 TOC 的文章页）；
+     projects 文章页在 .article-main 内改成统一左对齐（与右侧 TOC 平衡、去锯齿） */
   --article-measure: 760px;
   --article-wide: 1024px;
   font-family: var(--font-body);
@@ -734,13 +735,13 @@ img { display: block; max-width: 100%; height: auto; }
 }
 /* ContentRenderer 会把正文包一层 wrapper div，故用 `> * >` 穿过它命中真正的内容元素，
    同时天然排除 .not-prose 组件内部的 p/table（它们更深一层，不受阅读列约束）。 */
-/* 文本元素：居中的可读阅读列（避免 1536px 全宽横向扫读） */
-.prose > * > :where(p, ul, ol, blockquote, h2, h3, h4) {
+/* 文本元素：默认居中可读列（避免全宽横向扫读） */
+.prose > * > :where(p, ul, ol, blockquote, h2, h3, h4, h5, h6) {
   max-width: min(100%, var(--article-measure));
   margin-inline: auto;
 }
-/* 宽块：表格 / 代码 / 图 / MDC 组件 突破阅读列，但封顶在更克制的宽度、同轴居中 */
-.prose > * > :where(pre, table, figure, .not-prose) {
+/* 宽块：表格 / 代码 / 图 / MDC 组件 居中、封顶在更克制的宽度 */
+.prose > * > :where(pre, figure, .not-prose, table, .prose-table-wrap) {
   max-width: min(100%, var(--article-wide));
   margin-inline: auto;
 }
@@ -752,9 +753,21 @@ img { display: block; max-width: 100%; height: auto; }
   color: inherit;
   font-size: inherit;
 }
-/* 多列表格在窄屏可横滚；单元格顶对齐更整齐 */
-.prose > * > table { display: block; overflow-x: auto; width: 100%; }
-.prose th, .prose td { vertical-align: top; }
+/* 表格：可横滚容器 + 表头浅底、行分隔、偶数行斑马；两列表也填满列宽不留死白 */
+.prose .prose-table-wrap { overflow-x: auto; margin-block: 1.7em; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 0.95rem; line-height: 1.6; }
+.prose thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--paper-2);
+  padding: 0.6em 0.9em;
+  border-bottom: 1px solid var(--ink);
+  white-space: nowrap;
+}
+.prose td { padding: 0.6em 0.9em; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.prose tbody tr:last-child td { border-bottom: 0; }
+.prose tbody tr:nth-child(even) td { background: color-mix(in oklch, var(--paper-2) 45%, transparent); }
 /* 代码注释对比度兜底：palenight 注释色 #676E95 在深底上仅 ~2.76:1（低于 WCAG AA 4.5:1），
    其余 token 均达标。MDC(@nuxt/content) 把同色 token 收敛为同一“样式生成类”，注释统一落到
    .saEQR（由颜色 #676E95 派生、跨构建稳定），其显示色经 `html .shiki span{color:var(--shiki-default)}`
@@ -764,7 +777,8 @@ img { display: block; max-width: 100%; height: auto; }
 .prose h1, .prose h2, .prose h3, .prose h4 {
   font-family: var(--font-display);
   font-weight: 500;
-  letter-spacing: -0.015em;
+  letter-spacing: 0;      /* 负字距是给拉丁 Bodoni 的，套到换行中文会发挤 */
+  line-height: 1.3;       /* 覆盖全局 1.02，让换行的中文标题透气 */
 }
 .prose h2 {
   font-size: clamp(1.7rem, 1.6vw + 1rem, 2.4rem);
@@ -772,7 +786,7 @@ img { display: block; max-width: 100%; height: auto; }
   padding-bottom: 0.25em;
   border-bottom: 1px solid var(--rule);
 }
-.prose h3 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.4rem; margin-top: 2em; }
 .prose a {
   color: var(--ink);
   border-bottom: 1px solid var(--cobalt);
@@ -781,16 +795,23 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .prose a:hover { color: var(--cobalt); }
 .prose strong { color: var(--ink); font-weight: 700; }
+/* 引用 → 克制批注框：正文字体、非斜体、浅底 + 钴蓝左线，中文读起来稳 */
 .prose blockquote {
-  font-family: var(--font-display);
-  font-style: italic;
+  font-family: var(--font-body);
+  font-style: normal;
   font-weight: 400;
-  font-size: 1.6rem;
-  line-height: 1.3;
-  border-left: 2px solid var(--cobalt);
-  padding-left: 1.2em;
-  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--ink-soft);
+  background: var(--paper-2);
+  border-left: 3px solid var(--cobalt);
+  padding: 1em 1.25em;
+  margin-block: 1.8em;
 }
+.prose blockquote p { margin: 0; }
+.prose blockquote p + p { margin-top: 0.6em; }
+.prose blockquote strong { color: var(--ink); }
+.prose blockquote a { color: var(--cobalt); }
 .prose pre {
   font-family: var(--font-mono);
   font-size: 0.85rem;
@@ -810,6 +831,92 @@ img { display: block; max-width: 100%; height: auto; }
 }
 .prose code::before, .prose code::after { content: none; }
 .prose img { border-radius: 0; }
+
+/* =============================================================
+   Article layout — 正文 + 右侧 sticky 目录（TOC）
+   ============================================================= */
+.article-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem;
+}
+@media (min-width: 1024px) {
+  .article-layout {
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 4rem;
+  }
+}
+.article-main { min-width: 0; }
+
+/* projects 文章：正文与宽块统一左对齐（与右侧 TOC 平衡、去锯齿），并收窄阅读列/宽块 */
+.article-main .prose { --article-measure: 720px; --article-wide: 900px; }
+.article-main .prose > * > :where(p, ul, ol, blockquote, h2, h3, h4, h5, h6),
+.article-main .prose > * > :where(pre, figure, .not-prose, table, .prose-table-wrap) {
+  margin-inline: 0;
+}
+
+/* TOC 容器 */
+.toc { font-family: var(--font-body); }
+.toc--sticky {
+  position: sticky;
+  top: 6rem;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+}
+.toc__title {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 1rem;
+}
+.toc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid var(--rule);
+}
+.toc__link {
+  display: block;
+  padding: 0.32rem 0 0.32rem 0.9rem;
+  margin-left: -1px;
+  border-left: 1px solid transparent;
+  border-bottom: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+.toc__link:hover { color: var(--ink); }
+.toc__link.is-active {
+  color: var(--cobalt);
+  border-left-color: var(--cobalt);
+  font-weight: 500;
+}
+.toc__item--sub .toc__link { padding-left: 1.7rem; font-size: 0.78rem; }
+
+/* 移动端折叠目录 */
+.toc--inline { margin-bottom: 2.5rem; border: 1px solid var(--rule); }
+.toc__details > summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.toc__details > summary::-webkit-details-marker { display: none; }
+.toc__details > summary::after { content: '+'; color: var(--cobalt); font-size: 1.1rem; }
+.toc__details[open] > summary::after { content: '−'; }
+.toc--inline .toc__list { border-left: 0; padding: 0 1rem 0.8rem; }
+.toc--inline .toc__link { padding-left: 0.4rem; }
+.toc--inline .toc__item--sub .toc__link { padding-left: 1.2rem; }
 
 /* =============================================================
    Animations
