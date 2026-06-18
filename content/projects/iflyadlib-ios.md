@@ -1,7 +1,7 @@
 ---
 title: "讯飞广告 SDK · iOS（IFLYADLib）"
 description: "科大讯飞 ADX 广告 iOS SDK 的对外接入文档 — 开屏 / Banner / 插屏 / 信息流 / 激励视频五类广告，含 CocoaPods、SPM、隐私合规、服务端竞价与完整错误码。"
-date: "2026-06-16"
+date: "2026-06-18"
 github: "https://github.com/LJMcarryu/IFLYADLib_iOS"
 tags: [ios, ad-sdk, objective-c, cocoapods, spm]
 status: active
@@ -22,7 +22,7 @@ items:
   - title: 公开库 IFLYADLib
     meta: 对外 · 推荐
     desc: 标准发行版，五类广告齐全，按广告形式可组合接入。
-    points: ["类名 IFLYxxxAd", "CocoaPods / SPM", "当前 6.0.3"]
+    points: ["类名 IFLYxxxAd", "CocoaPods / SPM", "当前 6.0.7"]
   - title: 定制库 YSIFLYADLib
     meta: 白标定制
     desc: YS 媒体白标版，命名加前缀、资源内嵌、动态 framework。
@@ -69,7 +69,7 @@ items:
 | iOS 部署版本 | iOS 13.0 及以上 |
 | Xcode | 14.1 及以上 |
 | 语言 | Objective-C 接口（Swift 工程可直接桥接调用） |
-| 架构 | 真机 `arm64`；6.0.3 起含模拟器切片（`arm64` / `x86_64`），可直接在模拟器调试 |
+| 架构 | 真机 `arm64`；6.0.1 起（模型 A）含模拟器切片（`arm64` / `x86_64`），可直接在模拟器调试 |
 | 链接标记 | 公开库为静态 framework，**App Target 必须配置 `-ObjC`**；定制库为动态 framework，无需配置 |
 
 ## 安装 SDK
@@ -84,15 +84,15 @@ platforms:
   - id: full
     name: 全量接入
     shell: Podfile — 一行接入全部五类广告
-    command: "pod 'IFLYADLib', '6.0.3'"
+    command: "pod 'IFLYADLib', '6.0.7'"
   - id: combo
     name: 按需组合
     shell: Podfile — 例：仅开屏 + Banner（Splash 自动带入 VideoUI）
-    command: "pod 'IFLYADLib/Splash', '6.0.3'; pod 'IFLYADLib/Banner', '6.0.3'"
+    command: "pod 'IFLYADLib/Splash', '6.0.7'; pod 'IFLYADLib/Banner', '6.0.7'"
   - id: podspec
     name: podspec 直连
     shell: Podfile — CDN 未同步时按 tag 直连
-    command: "pod 'IFLYADLib/Splash', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/IFLYADLib_iOS/6.0.3/IFLYADLib.podspec'"
+    command: "pod 'IFLYADLib/Splash', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/IFLYADLib_iOS/6.0.7/IFLYADLib.podspec'"
 ---
 ::
 
@@ -106,12 +106,12 @@ target 'YourApp' do
   use_frameworks!
 
   # 全量：五类广告 + VideoUI + 内置资源
-  pod 'IFLYADLib', '6.0.3'
+  pod 'IFLYADLib', '6.0.7'
 
   # 或按需组合（Core 隐式必选；Splash / Interstitial / Reward 会自动带入 VideoUI）
-  # pod 'IFLYADLib/Splash', '6.0.3'
-  # pod 'IFLYADLib/Banner', '6.0.3'
-  # pod 'IFLYADLib/NativeFeed', '6.0.3'
+  # pod 'IFLYADLib/Splash', '6.0.7'
+  # pod 'IFLYADLib/Banner', '6.0.7'
+  # pod 'IFLYADLib/NativeFeed', '6.0.7'
 end
 ```
 
@@ -123,7 +123,7 @@ pod install --repo-update
 
 ### 方式二：Swift Package Manager
 
-在 Xcode `File › Add Package Dependencies…` 中输入仓库地址，选择版本 `6.0.3`，按需勾选 product：
+在 Xcode `File › Add Package Dependencies…` 中输入仓库地址，选择版本 `6.0.7`，按需勾选 product：
 
 ```text
 https://github.com/LJMcarryu/IFLYADLib_iOS
@@ -607,6 +607,7 @@ if (ad.bidInfo.winNoticeAvailable) {
 | 70204 | 无填充（No Fill） |
 | 70400 | 无效广告位 |
 | 70401 / 70404 | S2S Token 为空 / 无效或过期 |
+| 70406 | S2S Load 响应解码失败 |
 | 70403 | 超过日请求次数上限 |
 | 70500 | 服务端内部错误 |
 
@@ -630,7 +631,7 @@ if (ad.bidInfo.winNoticeAvailable) {
 
 | 维度 | 公开库 IFLYADLib | 定制库 YSIFLYADLib |
 | --- | --- | --- |
-| 当前版本 | 6.0.3 | 1.0.2 |
+| 当前版本 | 6.0.7 | 6.0.7 |
 | 类名 | `IFLYSplashAd` … | `YSIFLYSplashAd` …（加 `YS` 前缀） |
 | 公开方法 | `loadAdWithRequestConfig:` / `showInView:` / `destroy` | `ysifly_loadAdWithRequestConfig:` / `ysifly_showInView:` / `ysifly_destroy`（加 `ysifly_` 前缀） |
 | delegate 方法 | `splashAdDidReady:` … | `ysifly_splashAdDidReady:` …（加 `ysifly_` 前缀） |
@@ -648,11 +649,11 @@ platform :ios, '13.0'
 
 target 'YourApp' do
   use_frameworks!
-  pod 'YSIFLYADLib', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/YSIFLYADLib_iOS/1.0.2/YSIFLYADLib.podspec'
+  pod 'YSIFLYADLib', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/YSIFLYADLib_iOS/6.0.7/YSIFLYADLib.podspec'
 end
 ```
 
-SPM：`https://github.com/LJMcarryu/YSIFLYADLib_iOS.git`，版本 `1.0.2`，product `YSIFLYADLib`。
+SPM：`https://github.com/LJMcarryu/YSIFLYADLib_iOS.git`，版本 `6.0.7`，product `YSIFLYADLib`。
 
 调用对照（以开屏为例）：
 
@@ -682,10 +683,10 @@ YSIFLYSplashAd *ad = [[YSIFLYSplashAd alloc] initWithAdUnitId:@"xxx"];
 ::faq-list
 ---
 items:
-  - q: pod install 找不到 6.0.3 版本怎么办？
-    a: CocoaPods CDN 同步有延迟时，先执行 pod install --repo-update；仍不行则用 podspec 直连写法：pod 'IFLYADLib/Splash', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/IFLYADLib_iOS/6.0.3/IFLYADLib.podspec'。
+  - q: pod install 找不到 6.0.7 版本怎么办？
+    a: CocoaPods CDN 同步有延迟时，先执行 pod install --repo-update；仍不行则用 podspec 直连写法：pod 'IFLYADLib/Splash', :podspec => 'https://raw.githubusercontent.com/LJMcarryu/IFLYADLib_iOS/6.0.7/IFLYADLib.podspec'。
   - q: 真机正常、模拟器编译报架构错误？
-    a: 6.0.3 起 xcframework 已含模拟器切片，可直接在模拟器调试；若使用 6.0.0 等旧版则仅提供真机 arm64，请升级到 6.0.3。
+    a: 6.0.1 起（模型 A）xcframework 已含模拟器切片，可直接在模拟器调试；若使用 6.0.0 等旧版则仅提供真机 arm64，请升级到 6.0.7。
   - q: 运行时类找不到 / category 方法不生效 / 崩溃？
     a: 公开库是静态 framework，必须在 App Target 的 Other Linker Flags 加 -ObjC，否则 category 与 +load 会被链接器裁剪。定制库为动态 framework，无需此配置。
   - q: 广告图片或内置素材缺失（图标、播放控件不显示）？
@@ -705,12 +706,16 @@ items:
 
 | 版本 | 要点 |
 | --- | --- |
-| 6.0.3（推荐） | 伞头 `__has_include` 守卫，部分安装也可直接用伞头；二进制与 6.0.2 一致 |
+| 6.0.7（推荐） | 服务端竞价 S2S 正式环境域名切换为 `sdk-adx.voiceads.cn`（内部默认值，接入方不可见/不配置，灰度地址不变）；隐私清单 `NSPrivacyTrackingDomains` 新增该域；公开 API 与各格式行为不变，二进制因地址改动重建 |
+| 6.0.6 | SDK 内部日志精简（约 322→181 条）+ 日志输出彻底去 IFLY 字眼；公开 API 与各格式行为不变 |
+| 6.0.5 | 资源加载器跨域兜底修复（按格式分包域内缺图）+ SDK 版本号常量对齐发版号 |
+| 6.0.4 | 运行期日志前缀去品牌 `[IFLYAd]`→`[AdSDK]`（合规去名）；公开 API 与 `Full` 行为不变 |
+| 6.0.3 | 伞头 `__has_include` 守卫，部分安装也可直接用伞头；二进制与 6.0.2 一致 |
 | 6.0.2 | 模型 A 补齐 `PrivacyInfo.xcprivacy`，CocoaPods 随 Core 资源带入 |
 | 6.0.1 | 首次推出"按广告形式可组合接入"，各模块独立 xcframework |
 | 6.0.0 | API 大版本：公开五类广告入口与统一请求配置 `IFLYAdRequestConfig` |
 
-从 6.0.0 升级到 6.0.3：业务 API 无变化，可改为按广告形式组合接入；CocoaPods 直接升级版本号即可，无需改业务代码。
+从 6.0.0 升级到 6.0.7：业务 API 无变化，可改为按广告形式组合接入；CocoaPods 直接升级版本号即可，无需改业务代码。
 
 - 公开库：[github.com/LJMcarryu/IFLYADLib_iOS](https://github.com/LJMcarryu/IFLYADLib_iOS) · 通过 Issue 反馈问题（暂不接受外部 PR；安全漏洞请私密上报）
 - 定制库：[github.com/LJMcarryu/YSIFLYADLib_iOS](https://github.com/LJMcarryu/YSIFLYADLib_iOS)
